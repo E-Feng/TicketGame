@@ -1,14 +1,26 @@
 import Card from './Card';
 
+import { COLOR_VALUES } from './settings';
+
 export default class Deck {
-  constructor(scene, colors) {
+  constructor() {
     this.cards = [];
     this.boardCards = [null, null, null, null, null];
 
-    this.initDeck(colors);
+    this.initDeck(COLOR_VALUES);
     this.shuffle();
     this.replaceBoardCard();
   }
+
+  getJSONData = () => {
+    const data = [];
+    this.cards.forEach((card) => data.push(card.color));
+
+    return data;
+  };
+  setJSONData = (data) => {
+    this.cards = data.map((color) => new Card(color));
+  };
 
   initDeck = (colors) => {
     for (const color of Object.keys(colors)) {
@@ -25,6 +37,8 @@ export default class Deck {
       [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
     }
   };
+
+  draw = () => this.cards.pop();
 
   replaceBoardCard = () => {
     this.boardCards.forEach((card, i) => {

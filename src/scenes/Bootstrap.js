@@ -4,7 +4,6 @@ import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import {
   getDatabase,
   ref,
-  get,
   set,
   push,
   onValue,
@@ -45,16 +44,12 @@ export default class Bootstrap extends Phaser.Scene {
     super('bootstrap');
   }
 
-  initGame() {
+  initGameState() {
     this.gameState = new GameState();
-
-    console.log('init players', players);
-    console.log(this.gameState.deck);
 
     players.forEach((player) => this.gameState.addPlayer(player));
 
     const data = this.gameState.getJSONObject();
-
     set(initRef, data);
   }
 
@@ -62,7 +57,7 @@ export default class Bootstrap extends Phaser.Scene {
     initializeApp(FIREBASE_CONFIG);
 
     const db = getDatabase();
-    const roomId = 'abcdef';
+    const roomId = Math.floor(new Date().getTime() / 5000);
 
     eventRef = ref(db, `${roomId}/events/`);
     playerRef = ref(db, `${roomId}/players/`);
@@ -111,6 +106,6 @@ export default class Bootstrap extends Phaser.Scene {
     });
 
     this.startButton = this.add.text(200, 300, ['START']).setInteractive();
-    this.startButton.on('pointerdown', () => this.initGame());
+    this.startButton.on('pointerdown', () => this.initGameState());
   }
 }

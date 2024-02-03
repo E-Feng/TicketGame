@@ -17,22 +17,22 @@ export default class DrawCommand extends Command {
     }
   }
 
-  apply() {
+  apply = () => {
     if (this.isLegal()) {
-      const card = this.gameState.deck.deck.pop();
-      const player = this.gameState.players.filter(
-        (p) => p.id == this.playerId
-      )[0];
+      const card = this.gameState.deck.draw();
+      const player = this.gameState.getPlayer(this.playerId);
 
-      console.log(this.playerId, this.gameState.players, player);
-      player.hand.push(card);
-      player.render()
+      player.addCard(card);
+
+      if (this.playerId === localStorage.getItem('uid')) {
+        player.render();
+      }
 
       this.gameState.events.push(this.event);
     }
-  }
+  };
 
-  isLegal() {
+  isLegal = () => {
     return true;
-  }
+  };
 }
