@@ -7,20 +7,18 @@ services:
     restart: always
     build:
       context: .
-    ports:
-      - 80:80
-#     labels:
-#     - traefik.enable=true
-#     - traefik.http.routers.ticket.rule=Host(`ticket.elvinfeng.com`)
-#     - traefik.http.routers.ticket.tls=true
-#     - traefik.http.routers.ticket.tls.certresolver=lets-encrypt
-#     - traefik.port=80
-#     networks:
-#     - traefik_proxy
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.ticket.rule=Host(`ticket.elvinfeng.com`)
+    - traefik.http.routers.ticket.tls=true
+    - traefik.http.routers.ticket.tls.certresolver=lets-encrypt
+    - traefik.port=80
+    networks:
+    - traefik_proxy
 
-# networks:
-#   traefik_proxy:
-#     external:
-#       name: traefik_proxy
-#   default:
-#     driver: bridge
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
+  default:
+    driver: bridge
