@@ -9,10 +9,18 @@ export default class Player {
     this.points = 1;
     this.trainsLeft = NUM_TRAINS;
     this.hand = [];
-
   }
 
-  addCard = (card) => this.hand.push(card);
+  addCard = (card) => {
+    this.hand.push(card);
+    this.hand.sort((a, b) =>
+      a.color == 'wild'
+        ? 1
+        : b.color == 'wild'
+        ? -1
+        : a.color.localeCompare(b.color)
+    );
+  };
 
   render = () => {
     this.hand.forEach((card, i) => {

@@ -1,5 +1,3 @@
-import.meta.env.VITE_FIREBASE_KEY;
-
 export const NUM_MAX_PLAYERS = 5;
 export const NUM_TRAINS = 45;
 
@@ -16,7 +14,7 @@ export const COLOR_VALUES = {
 };
 
 export const FIREBASE_CONFIG = {
-  apiKey: process.env.VITE_FIREBASE_KEY,
+  apiKey: import.meta.env.VITE_FIREBASE_KEY,
   authDomain: 'ticketgame-ffc51.firebaseapp.com',
   databaseURL: 'https://ticketgame-ffc51-default-rtdb.firebaseio.com',
   projectId: 'ticketgame-ffc51',
