@@ -10,7 +10,6 @@ export default class Player {
     this.trainsLeft = NUM_TRAINS;
     this.hand = [];
 
-    this.pointsText = scene.add.text(200, 200, [this.hand.length]);
   }
 
   addCard = (card) => this.hand.push(card);
@@ -21,6 +20,5 @@ export default class Player {
         .image(100 + i * 20, 500, card.color)
         .setAngle(90);
     });
-    this.pointsText.setText(this.hand.length);
   };
 }

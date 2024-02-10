@@ -1,15 +1,20 @@
 import Card from './Card';
 
+import { shuffleArray } from '../utils/funcs';
 import { COLOR_VALUES } from './settings';
 
 export default class Deck {
-  constructor() {
+  constructor(initDeck) {
     this.cards = [];
     this.boardCards = [null, null, null, null, null];
 
-    this.initDeck(COLOR_VALUES);
-    this.shuffle();
-    this.replaceBoardCard();
+    if (initDeck) {
+      this.setJSONData(initDeck);
+    } else {
+      this.initDeck(COLOR_VALUES);
+      this.shuffle();
+      this.replaceBoardCard();
+    }
   }
 
   getJSONData = () => {
@@ -32,10 +37,7 @@ export default class Deck {
   };
 
   shuffle = () => {
-    for (let i = this.cards.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
-    }
+    shuffleArray(this.cards);
   };
 
   draw = () => this.cards.pop();
@@ -48,11 +50,4 @@ export default class Deck {
       }
     });
   };
-
-  // dealToHand = (player) => {
-  //   const card = this.deck.pop();
-  //   player.addToHand(card);
-  //   player.render();
-  //   setData(card.color)
-  // };
 }

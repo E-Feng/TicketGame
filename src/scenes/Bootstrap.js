@@ -11,7 +11,7 @@ import {
 } from 'firebase/database';
 
 import { FIREBASE_CONFIG } from '../helpers/settings';
-import GameState from '../helpers/GameState';
+import InitGameState from '../helpers/InitGameState';
 
 let initRef;
 let eventRef;
@@ -45,11 +45,12 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   initGameState() {
-    this.gameState = new GameState();
+    const gameState = new InitGameState();
 
-    players.forEach((player) => this.gameState.addPlayer(player));
+    players.forEach((player) => gameState.addPlayer(player));
+    gameState.randomizeTurnOrder()
 
-    const data = this.gameState.getJSONObject();
+    const data = gameState.getJSONObject();
     set(initRef, data);
   }
 
