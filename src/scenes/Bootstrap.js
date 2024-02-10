@@ -55,7 +55,6 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   preload() {
-    console.log(FIREBASE_CONFIG)
     initializeApp(FIREBASE_CONFIG);
 
     const db = getDatabase();
