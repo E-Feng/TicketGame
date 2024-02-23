@@ -16,7 +16,7 @@ export default class DrawCmd extends Command {
   }
 
   isLegal = () => {
-    const cond1 = this.gameState.getCurrentTurnId() === this.playerId;
+    const cond1 = this.gameState.isPlayersCurrentTurn(this.playerId);
 
     const cond2 = this.gameState.isActionContextEmpty();
     const cond3 = this.gameState.actionContextContains('drawAgain');

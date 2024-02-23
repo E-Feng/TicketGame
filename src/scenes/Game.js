@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 import GameState from '../helpers/GameState';
+import { initRender } from '../helpers/renderer';
 import { createCommand } from '../utils/cmdUtils';
 import { initEventsListener } from './Bootstrap';
 import { COLOR_VALUES } from '../helpers/settings';
@@ -19,17 +20,18 @@ export default class Game extends Phaser.Scene {
   }
 
   preload() {
+    this.load.image('map', `src/assets/map.jpg`);
     for (const color in COLOR_VALUES) {
       this.load.image(color, `src/assets/${color}.png`);
     }
   }
 
   create() {
-    console.log(this.gameState);
     initEventsListener(this.gameState);
     this.gameState.setupGame();
+    initRender(this.gameState)
 
-    this.dealText = this.add.text(500, 300, ['DECK HERE']).setInteractive();
+    this.dealText = this.add.text(1200, 500, ['DECK HERE']).setInteractive();
     // this.dealText.on('pointerdown', () => this.deck.dealToHand(this.player));
     this.dealText.on('pointerdown', () => {
       const cmd = new DrawCmd(this.gameState, playerId, null, true);

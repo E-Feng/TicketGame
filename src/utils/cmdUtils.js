@@ -1,3 +1,4 @@
+import BuildCmd from '../commands/BuildCmd';
 import DrawCmd from '../commands/DrawCmd';
 import DrawFaceUpCardCmd from '../commands/DrawFaceUpCardCmd';
 import EndTurnCmd from '../commands/EndTurnCmd';
@@ -6,6 +7,9 @@ export const createCommand = (command, gameState, player, payload) => {
   let cmd;
 
   switch (command) {
+    case 'build':
+      cmd = new BuildCmd(gameState, player, payload, false);
+      break;
     case 'draw':
       cmd = new DrawCmd(gameState, player, payload, false);
       break;

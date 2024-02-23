@@ -1,3 +1,4 @@
+import Board from './Board';
 import Deck from './Deck';
 import Player from './Player';
 import FaceUpCards from './FaceUpCards';
@@ -13,7 +14,7 @@ export default class GameState {
     this.actionContext = [];
     this.deck = this.initDeck;
     this.faceUpCards = new FaceUpCards(scene, this);
-    this.board = [];
+    this.board = new Board(scene, this);
 
     this.events = [];
     this.eventsQueue = [];
@@ -24,13 +25,13 @@ export default class GameState {
       const card = this.deck.draw();
       this.faceUpCards.replaceFaceUpCard(card);
     }
-    this.faceUpCards.render();
   };
 
   getPlayer = (id) => this.players.filter((p) => p.uid === id)[0];
 
   getCurrentTurnId = () => this.currentTurn;
   setCurrentTurn = (idx) => (this.currentTurn = this.players[idx].uid);
+  isPlayersCurrentTurn = (id) => this.currentTurn === id;
 
   isActionContextEmpty = () => this.actionContext.length === 0;
   actionContextContains = (action) => this.actionContext.includes(action);

@@ -35,7 +35,7 @@ export default class DrawFaceUpCardCmd extends Command {
       const faceUpCards = this.gameState.faceUpCards;
 
       this.player.addCard(this.clickedCard);
-      this.faceUpCards.removeCardByIndex(this.payload)
+      this.faceUpCards.removeCardByIndex(this.payload);
 
       const newCard = this.gameState.deck.draw();
       faceUpCards.replaceFaceUpCard(newCard);
@@ -51,9 +51,13 @@ export default class DrawFaceUpCardCmd extends Command {
       } else {
         this.gameState.addActionContext('drawAgain');
       }
-
-      this.player.render();
     }
-    this.gameState.faceUpCards.render();
+
+    this.render();
+  };
+
+  render = () => {
+    this.player.render();
+    this.faceUpCards.render();
   };
 }

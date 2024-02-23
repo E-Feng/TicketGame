@@ -1,4 +1,6 @@
 import DrawFaceUpCardCmd from '../commands/DrawFaceUpCardCmd';
+import { renderFaceUpCards } from './renderer';
+import { NUM_FACEUP_CARDS } from './settings';
 
 let playerId = localStorage.getItem('uid');
 
@@ -7,24 +9,35 @@ export default class FaceUpCards {
     this.scene = scene;
     this.gameState = gameState;
 
-    this.cards = [null, null, null, null, null];
+    this.cards = Array(NUM_FACEUP_CARDS).fill(null);
+    this.objs = [];
+
+    this.initObjects();
   }
 
+  initObjects = () => {
+    this.cards.forEach((_, i) => {
+      const obj =  this.scene.add.image()
+      obj.setInteractive()
+      obj.on('pointerdown', () => {
+        new DrawFaceUpCardCmd(this.gameState, playerId, i, true);
+      });
+
+      this.objs.push(obj)
+    });
+  };
+
+  render = () => {
+    renderFaceUpCards(this.objs);
+  };
+
   replaceFaceUpCard = (card) => {
-    const idx = this.cards.findIndex((c) => c === null);
-    this.cards[idx] = card;
+    const i = this.cards.findIndex((c) => c === null);
+    this.cards[i] = card;
+
+    this.objs[i].setData('color', card.color)
   };
 
   getCardByIndex = (i) => this.cards[i];
   removeCardByIndex = (i) => (this.cards[i] = null);
-
-  render = () => {
-    this.cards.forEach((card, i) => {
-      const a = this.scene.add.image(500, i * 50 + 50, card.color);
-      a.setInteractive();
-      a.on('pointerdown', (a) => {
-        new DrawFaceUpCardCmd(this.gameState, playerId, i, true);
-      });
-    });
-  };
 }
