@@ -1,3 +1,4 @@
+import Route from './Route';
 import BuildCmd from '../commands/BuildCmd';
 import { renderBoard } from './renderer';
 import { ROUTES } from './settings';
@@ -10,42 +11,15 @@ export default class Board {
     this.gameState = gameState;
 
     this.routes = ROUTES.map((r) => {
-      return {
-        ...r,
-        owner: r.tracks.length === 2 ? [null, null] : [null],
-      };
+      return new Route(scene, gameState, r)
     });
-    this.objs = [];
-
-    this.initObjects();
   }
 
-  initObjects = () => {
-    this.routes.forEach((r) => {
-      const obj = this.scene.add.rectangle();
-      obj.setData('data', r)
-
-      obj.setInteractive();
-      obj.on('pointerdown', () =>
-        new BuildCmd(this.gameState, playerId, 1, true)
-      );
-
-      this.objs.push(obj)
-    });
-  };
-
   render = () => {
-    renderBoard(this.scene, this.objs)
+    renderBoard(this.scene, this.routes)
   }
 
   getRouteById = (id) => this.routes.filter(r => r.id === id)[0]
-
-  setOwner = (playerId, routeId, track) => {
-    const route = this.getRouteById(routeId);
-    const trackIdx = route.tracks.findIndex(t => t === track);
-
-    route.owner[trackIdx] = playerId;
-  };
 
   // render = () => {
   //   this.board.forEach((r, i) => {

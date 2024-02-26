@@ -1,4 +1,5 @@
-import { NUM_TRAINS } from './settings';
+import { NUM_TRAINS, COLOR_VALUES } from './settings';
+import { renderHand } from './renderer';
 
 export default class Player {
   constructor(scene, uid) {
@@ -8,25 +9,37 @@ export default class Player {
     this.id = 1;
     this.points = 1;
     this.trainsLeft = NUM_TRAINS;
+
     this.hand = [];
   }
 
-  addCard = (card) => {
-    this.hand.push(card);
-    this.hand.sort((a, b) =>
-      a.color == 'wild'
-        ? 1
-        : b.color == 'wild'
-        ? -1
-        : a.color.localeCompare(b.color)
-    );
+  render = () => {
+    renderHand(this.hand);
   };
 
-  render = () => {
-    this.hand.forEach((card, i) => {
-      const aa = this.scene.add
-        .image(100 + i * 20, 500, card.color)
-        .setAngle(90);
+  sortCards = (a, b) => {
+    const aa = a.color;
+    const bb = b.color;
+
+    return aa == 'wild' ? 1 : bb == 'wild' ? -1 : aa.localeCompare(bb);
+  };
+
+  addCard = (card) => {
+    this.hand.push(card);
+    this.hand.sort(this.sortCards);
+  };
+
+  getSelectedCards = () => this.hand.filter((card) => card.selected);
+
+  getSelectedTotal = () => {
+    const cards = this.getSelectedCards();
+    const summary = {};
+    Object.keys(COLOR_VALUES).forEach((c) => (summary[c] = 0));
+
+    cards.forEach((card) => {
+      const color = card.color;
+      summary[color] = summary[color] + 1;
     });
+    return summary;
   };
 }

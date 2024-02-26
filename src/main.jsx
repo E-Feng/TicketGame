@@ -5,11 +5,12 @@ import './index.css';
 
 import Bootstrap from './scenes/Bootstrap';
 import Game from './scenes/Game.js';
+import { width, height } from './helpers/renderer.js';
 
 const config = {
   type: Phaser.AUTO,
-  width: 1920,
-  height: 1080,
+  width: width,
+  height: height,
   scene: [Bootstrap, Game],
   scale: {
     mode: Phaser.Scale.FIT,

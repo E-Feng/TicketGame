@@ -45,7 +45,7 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   initGameState() {
-    const gameState = new InitGameState();
+    const gameState = new InitGameState(this);
 
     players.forEach((player) => gameState.addPlayer(player));
     gameState.randomizeTurnOrder()
@@ -55,6 +55,7 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   preload() {
+    console.log(FIREBASE_CONFIG)
     initializeApp(FIREBASE_CONFIG);
 
     const db = getDatabase();

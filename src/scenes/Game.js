@@ -21,6 +21,8 @@ export default class Game extends Phaser.Scene {
 
   preload() {
     this.load.image('map', `src/assets/map.jpg`);
+    this.load.image('deck', `src/assets/deck.png`);
+
     for (const color in COLOR_VALUES) {
       this.load.image(color, `src/assets/${color}.png`);
     }
@@ -29,13 +31,7 @@ export default class Game extends Phaser.Scene {
   create() {
     initEventsListener(this.gameState);
     this.gameState.setupGame();
-    initRender(this.gameState)
-
-    this.dealText = this.add.text(1200, 500, ['DECK HERE']).setInteractive();
-    // this.dealText.on('pointerdown', () => this.deck.dealToHand(this.player));
-    this.dealText.on('pointerdown', () => {
-      const cmd = new DrawCmd(this.gameState, playerId, null, true);
-    });
+    initRender(this.gameState);
   }
 
   update() {

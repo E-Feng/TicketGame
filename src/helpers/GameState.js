@@ -7,7 +7,7 @@ export default class GameState {
   constructor(scene, initGameState) {
     this.scene = scene;
 
-    this.initDeck = new Deck(initGameState.deck);
+    this.initDeck = new Deck(scene, this, initGameState.deck);
     this.players = initGameState.players.map((p) => new Player(scene, p));
 
     this.currentTurn = this.players[0].uid;

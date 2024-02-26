@@ -3,8 +3,8 @@ import Deck from './Deck';
 import { shuffleArray } from '../utils/funcs';
 
 export default class InitGameState {
-  constructor() {
-    this.deck = new Deck();
+  constructor(scene) {
+    this.deck = new Deck(scene);
     this.players = [];
   }
 

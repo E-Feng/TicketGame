@@ -1,20 +1,29 @@
 import Card from './Card';
-
+import DrawCmd from '../commands/DrawCmd';
+import { renderDeck } from './renderer';
 import { shuffleArray } from '../utils/funcs';
 import { COLOR_VALUES } from './settings';
 
+let playerId = localStorage.getItem('uid');
+
 export default class Deck {
-  constructor(initDeck) {
+  constructor(scene, gameState, initDeck) {
+    this.scene = scene;
+    this.obj = scene.add.image();
     this.cards = [];
-    this.boardCards = [null, null, null, null, null];
+    this.discard = [];
 
     if (initDeck) {
       this.setJSONData(initDeck);
     } else {
       this.initDeck(COLOR_VALUES);
       this.shuffle();
-      this.replaceBoardCard();
     }
+
+    this.obj.setInteractive();
+    this.obj.on('pointerdown', () => {
+      new DrawCmd(gameState, playerId, null, true);
+    });
   }
 
   getJSONData = () => {
@@ -24,16 +33,20 @@ export default class Deck {
     return data;
   };
   setJSONData = (data) => {
-    this.cards = data.map((color) => new Card(color));
+    this.cards = data.map((color) => new Card(this.scene, color));
   };
 
   initDeck = (colors) => {
     for (const color of Object.keys(colors)) {
       for (let i = 0; i < colors[color]; i++) {
-        const card = new Card(color);
+        const card = new Card(this.scene, color);
         this.cards.push(card);
       }
     }
+  };
+
+  render = () => {
+    renderDeck(this);
   };
 
   shuffle = () => {
@@ -41,13 +54,4 @@ export default class Deck {
   };
 
   draw = () => this.cards.pop();
-
-  replaceBoardCard = () => {
-    this.boardCards.forEach((card, i) => {
-      if (card === null) {
-        const newCard = this.cards.pop();
-        this.boardCards[i] = newCard;
-      }
-    });
-  };
 }
