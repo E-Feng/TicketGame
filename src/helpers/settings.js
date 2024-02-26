@@ -1,12 +1,12 @@
 const getFirebaseKey = async () => {
-  if (import.meta.env.VITE_FIREBASE_KEY) {
-    return import.meta.env.VITE_FIREBASE_KEY
-  }
+  // if (import.meta.env.VITE_FIREBASE_KEY) {
+  //   return import.meta.env.VITE_FIREBASE_KEY
+  // }
 
   const url = 'https://bmowiw89bd.execute-api.us-east-1.amazonaws.com/'
   const res = await fetch(url)
+  console.log(res)
   const data = await res.text()
-  console.log(data)
 
   return data
 }
