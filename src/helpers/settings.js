@@ -5,7 +5,7 @@ const getFirebaseKey = async () => {
 
   const url = 'https://bmowiw89bd.execute-api.us-east-1.amazonaws.com/'
   const res = await fetch(url)
-  const data = await res.json()
+  const data = await res.text()
 
   return data
 }
