@@ -1,40 +1,25 @@
 import Card from './Card';
 import DrawCmd from '../commands/DrawCmd';
-import { renderDeck } from './renderer';
+import { renderDeck } from '../helpers/renderer';
 import { shuffleArray } from '../utils/funcs';
-import { COLOR_VALUES } from './settings';
+import { COLOR_VALUES } from '../helpers/settings';
 
 let playerId = localStorage.getItem('uid');
 
 export default class Deck {
-  constructor(scene, gameState, initDeck) {
+  constructor(scene, gameState) {
     this.scene = scene;
     this.obj = scene.add.image();
     this.cards = [];
-    this.discard = [];
+    this.discardPile = [];
 
-    if (initDeck) {
-      this.setJSONData(initDeck);
-    } else {
-      this.initDeck(COLOR_VALUES);
-      this.shuffle();
-    }
+    this.initDeck(COLOR_VALUES);
 
     this.obj.setInteractive();
     this.obj.on('pointerdown', () => {
       new DrawCmd(gameState, playerId, null, true);
     });
   }
-
-  getJSONData = () => {
-    const data = [];
-    this.cards.forEach((card) => data.push(card.color));
-
-    return data;
-  };
-  setJSONData = (data) => {
-    this.cards = data.map((color) => new Card(this.scene, color));
-  };
 
   initDeck = (colors) => {
     for (const color of Object.keys(colors)) {
@@ -50,8 +35,14 @@ export default class Deck {
   };
 
   shuffle = () => {
-    shuffleArray(this.cards);
+    shuffleArray(this.cards, Math.random());
   };
 
   draw = () => this.cards.pop();
+
+  discard = (card) => {
+    console.log(card);
+    card.setDiscarded();
+    this.discardPile.push(card);
+  };
 }

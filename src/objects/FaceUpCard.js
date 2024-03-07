@@ -1,10 +1,10 @@
 import DrawFaceUpCardCmd from '../commands/DrawFaceUpCardCmd';
-import { renderFaceUpCards } from './renderer';
-import { NUM_FACEUP_CARDS } from './settings';
+import { renderFaceUpCards } from '../helpers/renderer';
+import { NUM_FACEUP_CARDS } from '../helpers/settings';
 
 let playerId = localStorage.getItem('uid');
 
-export default class FaceUpCards {
+export default class FaceUpCard {
   constructor(scene, gameState) {
     this.scene = scene;
     this.gameState = gameState;

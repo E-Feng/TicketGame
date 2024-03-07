@@ -11,7 +11,6 @@ import {
 } from 'firebase/database';
 
 import { FIREBASE_CONFIG } from '../helpers/settings';
-import InitGameState from '../helpers/InitGameState';
 
 let initRef;
 let eventRef;
@@ -28,14 +27,29 @@ export const initEventsListener = (gameState) => {
   onValue(eventRef, (snapshot) => {
     if (!snapshot.val()) return;
 
-    console.log('Grabbing new data');
-    const data = snapshot.val();
+    const dbEvents = snapshot.val();
+    const dbEventKeys = Object.keys(dbEvents);
 
-    const keys = Object.keys(data);
-    const lastKey = keys[keys.length - 1];
-    const lastEvent = data[lastKey];
+    const events = gameState.events
+    const lastKey = events[events.length - 1]?.id;
 
-    gameState.eventsQueue.push(lastEvent);
+    const idx = dbEventKeys.indexOf(lastKey)
+
+    const newEventKeys = [];
+    if (idx < 0) {
+      dbEventKeys.forEach(k => newEventKeys.push(k))
+    } else {
+      console.log(idx, dbEventKeys.slice(idx + 1))
+      dbEventKeys.slice(idx + 1).forEach(k => newEventKeys.push(k))
+    }
+
+    newEventKeys.forEach((key) => {
+      const event = {
+        id: key,
+        ...dbEvents[key],
+      };
+      gameState.eventsQueue.push(event);
+    });
   });
 };
 
@@ -45,13 +59,14 @@ export default class Bootstrap extends Phaser.Scene {
   }
 
   initGameState() {
-    const gameState = new InitGameState(this);
+    // const gameState = new InitGameState(this);
+    // const gameState = new GameState(this, players)
 
-    players.forEach((player) => gameState.addPlayer(player));
-    gameState.randomizeTurnOrder()
+    // players.forEach((player) => gameState.addPlayer(player));
+    // gameState.randomizeTurnOrder()
 
-    const data = gameState.getJSONObject();
-    set(initRef, data);
+    // const data = gameState.getJSONObject();
+    set(initRef, 1);
   }
 
   preload() {
@@ -74,7 +89,7 @@ export default class Bootstrap extends Phaser.Scene {
         localStorage.setItem('uid', playerId);
 
         selfRef = ref(db, `${roomId}/players/${playerId}`);
-        set(selfRef, { uid: playerId });
+        set(selfRef, playerId);
 
         onDisconnect(selfRef).remove();
       }
@@ -82,9 +97,10 @@ export default class Bootstrap extends Phaser.Scene {
 
     // Setting up game state ref
     onValue(initRef, (snapshot) => {
-      const data = snapshot.val();
-      if (!data) return;
+      const ss = snapshot.val();
+      if (!ss) return;
 
+      const data = { players: players, settings: null };
       this.scene.start('game', data);
     });
   }
@@ -98,10 +114,11 @@ export default class Bootstrap extends Phaser.Scene {
 
       if (!snapshot.val()) return;
 
-      players = Object.values(snapshot.val());
+      console.log(snapshot.val());
+      players = Object.keys(snapshot.val());
 
       players.forEach((player, i) => {
-        const text = this.add.text(100, i * 100 + 100, [player.uid]);
+        const text = this.add.text(100, i * 100 + 100, [player]);
         texts.push(text);
       });
     });

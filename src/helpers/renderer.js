@@ -8,12 +8,14 @@ export const height = 1080;
 const mapWidth = 1894 * mapScale;
 const mapHeight = 1212 * mapScale;
 
-const cardsX = mapWidth + 100;
+const cardsX = mapWidth + 75;
 
 export const initRender = (gameState) => {
   gameState.faceUpCards.render();
   gameState.board.render();
   gameState.deck.render();
+  gameState.destDeck.render();
+  gameState.players.forEach((p) => p.render());
 };
 
 const handX = 400;
@@ -31,7 +33,7 @@ export const renderCard = (card) => {
 
   obj.setPosition(x, y);
   obj.setTexture(color);
-  obj.setActive(true);
+  obj.setVisible(true);
 };
 
 export const renderHand = (hand) => {
@@ -45,10 +47,47 @@ export const renderHand = (hand) => {
   });
 };
 
+const destX = 700;
+const destY = 900;
+export const renderDestCards = (destCards) => {
+  destCards.forEach((card, i) => {
+    const objGroup = card.objGroup;
+
+    objGroup.cities
+      .setPosition(destX + i * 75, destY)
+      .setFontSize(24)
+      .setVisible(true);
+    objGroup.points
+      .setPosition(destX + i * 75, destY + 50)
+      .setFontSize(24)
+      .setVisible(true);
+  });
+};
+
+const scoreX = cardsX + 80;
+const scoreY = 150;
+const playerCardHeight = 120;
+export const renderPlayerCard = (objGroup) => {
+  const offset = (objGroup.order - 1) * playerCardHeight;
+
+  objGroup.points.setPosition(scoreX, scoreY + offset).setFontSize(24);
+  objGroup.trainsLeft.setPosition(scoreX, scoreY + 20 + offset).setFontSize(24);
+  objGroup.handSize.setPosition(scoreX, scoreY + 40 + offset).setFontSize(24);
+  objGroup.numDestCards
+    .setPosition(scoreX, scoreY + 60 + offset)
+    .setFontSize(24);
+};
+
 export const renderDeck = (deck) => {
   const obj = deck.obj;
   obj.setTexture('deck');
-  obj.setPosition(cardsX, 700);
+  obj.setPosition(cardsX, 600);
+};
+
+export const renderDestDeck = (destDeck) => {
+  const obj = destDeck.obj;
+  obj.setTexture('dest');
+  obj.setPosition(cardsX, 750);
 };
 
 export const renderFaceUpCards = (objs) => {
@@ -113,25 +152,28 @@ const boardCoords = {
   WIN: { coords: [852, 120] },
 };
 Object.keys(boardCoords).forEach((k) => {
-  boardCoords[k].coords = boardCoords[k].coords.map((v) => Math.round(v * mapScale));
+  boardCoords[k].coords = boardCoords[k].coords.map((v) =>
+    Math.round(v * mapScale)
+  );
 });
 
 const tWidth = 20;
 const tHeight = 10;
 
-export const renderBoard = (scene, objs) => {
+export const renderBoard = (scene, routeObjs) => {
   console.log('rendering');
   const bg = scene.add.image(0, 0, 'map').setScale(mapScale).setOrigin(0);
   bg.setDepth(-1);
 
-  objs.forEach((r, i) => {
+  routeObjs.forEach((r, i) => {
     const o = r.obj;
+    o.setVisible(true);
 
     const data = r;
     const [city1, city2] = data.cities;
     const pos1 = boardCoords[city1].coords;
     const pos2 = boardCoords[city2].coords;
-    const nTrains = data.number;
+    const nTrains = data.length;
 
     setRectangleProps(o, pos1, pos2);
 

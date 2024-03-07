@@ -1,6 +1,8 @@
 import Command from './Command';
 import EndTurnCmd from './EndTurnCmd';
 
+const localPlayerId = localStorage.getItem('uid');
+
 export default class DrawFaceUpCardCmd extends Command {
   constructor(gameState, playerId, payload, init) {
     super(gameState, playerId, payload);
@@ -45,7 +47,7 @@ export default class DrawFaceUpCardCmd extends Command {
   };
 
   end = (clickedCard) => {
-    if (this.playerId === localStorage.getItem('uid')) {
+    if (this.playerId === localPlayerId) {
       if (clickedCard.color === 'wild' || this.isSecondDraw) {
         new EndTurnCmd(this.gameState, this.playerId, null, true);
       } else {
@@ -57,7 +59,10 @@ export default class DrawFaceUpCardCmd extends Command {
   };
 
   render = () => {
-    this.player.render();
+    if (this.playerId === localPlayerId) {
+      this.player.render();
+    }
+    
     this.faceUpCards.render();
   };
 }

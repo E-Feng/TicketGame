@@ -18,5 +18,5 @@ export default class InitGameState {
 
   addPlayer = (player) => this.players.push(player);
 
-  randomizeTurnOrder = () => shuffleArray(this.players);
+  randomizeTurnOrder = () => shuffleArray(this.players, Math.random());
 }

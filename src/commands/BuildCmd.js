@@ -1,4 +1,7 @@
 import Command from './Command';
+import EndTurnCmd from './EndTurnCmd';
+
+const localPlayerId = localStorage.getItem('uid');
 
 export default class BuildCmd extends Command {
   constructor(gameState, playerId, payload, init) {
@@ -9,9 +12,8 @@ export default class BuildCmd extends Command {
       playerId: playerId,
       payload: payload,
     };
-    this.route = this.board.getRouteById(payload)
-    this.selectedCards = this.player.getSelectedCards()
-    this.selectedTotal = this.player.getSelectedTotal()
+    this.payment = payload.payment;
+    this.route = this.board.getRouteById(payload.id);
 
     if (this.isLegal() && init) {
       this.send(this.event);
@@ -19,31 +21,41 @@ export default class BuildCmd extends Command {
   }
 
   isLegal = () => {
-    console.log("clicked build")
     const cond1 = this.gameState.isPlayersCurrentTurn(this.playerId);
     const cond2 = this.gameState.isActionContextEmpty();
 
-    const cond3 = this.route.canBuildTrack(this.selectedTotal)
-    console.log(cond3)
+    const cond3 = this.route.canBuildTrack(this.payment);
 
-    return cond1 && cond2;
+    return cond1 && cond2 && cond3;
   };
 
   apply = () => {
-    if (this.isLegal) {
-      const routeId = this.event.payload
-      console.log(routeId, this.route)
-      this.route.setOwner(this.playerId, 'grey')
+    if (this.isLegal()) {
+      const trackColor = this.payment[0];
+      this.route.setOwner(this.playerId, trackColor);
 
-      this.end()
+      this.payment.forEach((color) => {
+        const card = this.player.removeCard(color);
+        this.deck.discard(card);
+      });
+
+      this.player.addPoints(this.route.getPointValue())
+      this.player.minusTrains(this.route.getRouteLength())
+
+      this.end();
     }
-  }
+  };
 
   end = () => {
-    this.render()
-  }
+    if (this.playerId === localPlayerId) {
+      new EndTurnCmd(this.gameState, this.playerId, null, true);
+    }
+
+    this.render();
+  };
 
   render = () => {
-    this.board.render()
-  }
+    this.player.render();
+    this.board.render();
+  };
 }

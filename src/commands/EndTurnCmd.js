@@ -15,10 +15,8 @@ export default class EndTurnCmd extends Command {
   }
 
   apply = () => {
-    const numPlayers = this.gameState.players.length;
-    const currentIdx = this.gameState.players.findIndex(
-      (p) => p.uid === this.playerId
-    );
+    const numPlayers = this.players.length;
+    const currentIdx = this.players.findIndex((p) => p.id === this.playerId);
     const nextIdx = (currentIdx + 1) % numPlayers;
 
     this.gameState.clearActionContext();

@@ -1,6 +1,8 @@
 import Command from './Command';
 import EndTurnCmd from './EndTurnCmd';
 
+const localPlayerId = localStorage.getItem('uid');
+
 export default class DrawCmd extends Command {
   constructor(gameState, playerId, payload, init) {
     super(gameState, playerId, payload);
@@ -37,14 +39,18 @@ export default class DrawCmd extends Command {
   end = () => {
     const isSecondDraw = this.gameState.actionContextContains('drawAgain');
 
-    if (this.playerId === localStorage.getItem('uid')) {
+    if (this.playerId === localPlayerId) {
       if (isSecondDraw) {
         new EndTurnCmd(this.gameState, this.playerId, null, true);
       } else {
         this.gameState.addActionContext('drawAgain');
       }
-
-      this.player.render();
     }
+
+    this.render();
+  };
+
+  render = () => {
+    this.player.render();
   };
 }

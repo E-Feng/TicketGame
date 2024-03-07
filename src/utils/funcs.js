@@ -1,7 +1,14 @@
-export const shuffleArray = (array) => {
+export const shuffleArray = (array, inputSeed) => {
+  const seededRandom = (seed) => {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  };
+
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(seededRandom(inputSeed) * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
+
+    inputSeed++;
   }
 };
 
@@ -16,7 +23,7 @@ export const setRectangleProps = (o, c1, c2) => {
   o.setPosition(midX, midY);
   o.setSize(dist, 40);
   o.setAngle(angle);
-  o.setStrokeStyle(5, 0xff0000, 1)
+  o.setStrokeStyle(5, 0xff0000, 1);
 };
 
 export const getTrainCoords = (c1, c2, n) => {

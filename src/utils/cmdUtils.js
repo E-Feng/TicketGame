@@ -2,6 +2,7 @@ import BuildCmd from '../commands/BuildCmd';
 import DrawCmd from '../commands/DrawCmd';
 import DrawFaceUpCardCmd from '../commands/DrawFaceUpCardCmd';
 import EndTurnCmd from '../commands/EndTurnCmd';
+import ShuffleCmd from '../commands/ShuffleCmd';
 
 export const createCommand = (command, gameState, player, payload) => {
   let cmd;
@@ -18,6 +19,9 @@ export const createCommand = (command, gameState, player, payload) => {
       break;
     case 'endTurn':
       cmd = new EndTurnCmd(gameState, player, payload, false);
+      break;
+    case 'shuffle':
+      cmd = new ShuffleCmd(gameState, null, payload, false);
       break;
   }
 
