@@ -24,7 +24,7 @@ export default class BuildCmd extends Command {
     const cond1 = this.gameState.isPlayersCurrentTurn(this.playerId);
     const cond2 = this.gameState.isActionContextEmpty();
 
-    const cond3 = this.route.canBuildTrack(this.payment);
+    const cond3 = this.route.canBuildTrack(this.playerId, this.payment);
 
     return cond1 && cond2 && cond3;
   };

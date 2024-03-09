@@ -41,7 +41,6 @@ export default class Deck {
   draw = () => this.cards.pop();
 
   discard = (card) => {
-    console.log(card);
     card.setDiscarded();
     this.discardPile.push(card);
   };

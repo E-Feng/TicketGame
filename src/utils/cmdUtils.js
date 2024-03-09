@@ -1,6 +1,6 @@
 import BuildCmd from '../commands/BuildCmd';
 import DrawCmd from '../commands/DrawCmd';
-import DrawFaceUpCardCmd from '../commands/DrawFaceUpCardCmd';
+import DrawFaceUpCardCmd from '../commands/DrawFaceUpCmd';
 import EndTurnCmd from '../commands/EndTurnCmd';
 import ShuffleCmd from '../commands/ShuffleCmd';
 

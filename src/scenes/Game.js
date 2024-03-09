@@ -22,12 +22,13 @@ export default class Game extends Phaser.Scene {
   preload() {
     this.load.path = 'src/assets/';
 
-    for (const color in COLOR_VALUES) {
-      this.load.image(color, `${color}.png`);
-    }
     this.load.image('map', `map.jpg`);
     this.load.image('deck', `deck.png`);
     this.load.image('dest', `dest.png`);
+
+    for (const color in COLOR_VALUES) {
+      this.load.image(color, `${color}.png`);
+    }
   }
 
   create() {
@@ -45,7 +46,7 @@ export default class Game extends Phaser.Scene {
     }
 
     if (this.gameState.eventsQueue.length > 0) {
-      console.log('invoking', this.gameState.eventsQueue[0]);
+      console.log('invoking', this.gameState.eventsQueue[0].command);
       const event = this.gameState.eventsQueue.shift();
       this.gameState.events.push(event);
 

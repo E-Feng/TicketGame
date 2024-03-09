@@ -1,4 +1,4 @@
-import DrawFaceUpCardCmd from '../commands/DrawFaceUpCardCmd';
+import DrawFaceUpCmd from '../commands/DrawFaceUpCmd';
 import { renderFaceUpCards } from '../helpers/renderer';
 import { NUM_FACEUP_CARDS } from '../helpers/settings';
 
@@ -20,7 +20,7 @@ export default class FaceUpCard {
       const obj =  this.scene.add.image()
       obj.setInteractive()
       obj.on('pointerdown', () => {
-        new DrawFaceUpCardCmd(this.gameState, playerId, i, true);
+        new DrawFaceUpCmd(this.gameState, playerId, i, true);
       });
 
       this.objs.push(obj)

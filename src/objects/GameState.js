@@ -30,15 +30,19 @@ export default class GameState {
   }
 
   setupServerEvents = () => {
+    const shufflePlayersPayload = { array: 'players', seed: Math.random() };
     const shuffleDeckPayload = { array: 'deck', seed: Math.random() };
     const shuffleDestCardsPayload = { array: 'dests', seed: Math.random() };
     if (playerId === this.currentTurn) {
+      new ShuffleCmd(this, this.currentTurn, shufflePlayersPayload, true);
       new ShuffleCmd(this, this.currentTurn, shuffleDeckPayload, true);
       new ShuffleCmd(this, this.currentTurn, shuffleDestCardsPayload, true);
     }
   };
 
   setupGame = () => {
+    this.currentTurn = this.players[0].id;
+
     // Deal out faceup cards
     for (let i = 0; i < NUM_FACEUP_CARDS; i++) {
       const card = this.deck.draw();

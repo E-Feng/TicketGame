@@ -3,7 +3,7 @@ import EndTurnCmd from './EndTurnCmd';
 
 const localPlayerId = localStorage.getItem('uid');
 
-export default class DrawFaceUpCardCmd extends Command {
+export default class DrawFaceUpCmd extends Command {
   constructor(gameState, playerId, payload, init) {
     super(gameState, playerId, payload);
 
@@ -59,10 +59,7 @@ export default class DrawFaceUpCardCmd extends Command {
   };
 
   render = () => {
-    if (this.playerId === localPlayerId) {
-      this.player.render();
-    }
-    
+    this.player.render();
     this.faceUpCards.render();
   };
 }

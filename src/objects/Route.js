@@ -10,10 +10,11 @@ export default class Route {
     this.id = props.id;
     this.cities = props.cities;
     this.length = props.length;
-    this.tracks = props.tracks.map((t) => {
+    this.tracks = props.tracks.map((t, i) => {
       return {
-        color: t,
         owner: null,
+        color: t,
+        coords: props.coords.slice(i * this.length, this.length * (i + 1)),
       };
     });
 
@@ -31,15 +32,14 @@ export default class Route {
   getRouteLength = () => this.length;
   getPointValue = () => TRAIN_POINTS[this.length];
 
-  getOpenTracks = () => {
-    if (this.tracks.some((t) => t.owner === localPlayerId)) return [];
+  getOpenTracks = () => this.tracks.filter((t) => t.owner === null);
 
-    return this.tracks.filter((t) => t.owner === null);
-  };
-
-  canBuildTrack = (payment) => {
+  canBuildTrack = (playerId, payment) => {
+    const allTracks = this.tracks;
     const tracks = this.getOpenTracks();
+
     if (tracks.length === 0) return false;
+    if (allTracks.some((t) => t.owner === playerId)) return false;
 
     // Incorrect count, 2 nonwild colors
     if (payment.length !== this.length) return false;
@@ -55,12 +55,10 @@ export default class Route {
 
   setOwner = (playerId, trackColor) => {
     const tracks = this.getOpenTracks();
+    const colors = [trackColor, 'grey'];
 
-    const track = tracks.filter(
-      (t) => t.color === trackColor || t.color === 'grey'
-    )[0];
+    const track = tracks.filter((t) => colors.includes(t.color))[0];
 
     track.owner = playerId;
-    console.log('owner set', this.id);
   };
 }

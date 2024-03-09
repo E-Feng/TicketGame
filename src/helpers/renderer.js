@@ -1,4 +1,4 @@
-import { setRectangleProps, getTrainCoords } from '../utils/funcs';
+import { calculateTrainAngle, setRectangleProps } from '../utils/funcs';
 
 const mapScale = 0.7;
 
@@ -18,7 +18,7 @@ export const initRender = (gameState) => {
   gameState.players.forEach((p) => p.render());
 };
 
-const handX = 400;
+const handX = 100;
 const handY = 900;
 
 const selectedOffset = 20;
@@ -47,7 +47,7 @@ export const renderHand = (hand) => {
   });
 };
 
-const destX = 700;
+const destX = 1200;
 const destY = 900;
 export const renderDestCards = (destCards) => {
   destCards.forEach((card, i) => {
@@ -102,6 +102,14 @@ export const renderFaceUpCards = (objs) => {
   });
 };
 
+export const playerColorMap = {
+  red: 0xff0000,
+  blue: 0x0000ff,
+  green: 0x00ff00,
+  yellow: 0xffff00,
+  orange: 0xffa500,
+};
+
 const colorMap = {
   red: 0xff0000,
   blue: 0x0000ff,
@@ -113,7 +121,7 @@ const colorMap = {
   yellow: 0xffff00,
   orange: 0xffa500,
 };
-const boardCoords = {
+export const boardCoords = {
   ATL: { coords: [1520, 787] },
   BOS: { coords: [1857, 205] },
   CAL: { coords: [403, 97] },
@@ -157,15 +165,14 @@ Object.keys(boardCoords).forEach((k) => {
   );
 });
 
-const tWidth = 20;
-const tHeight = 10;
+const tWidth = 30;
+const tHeight = 15;
 
-export const renderBoard = (scene, routeObjs) => {
-  console.log('rendering');
+export const renderBoard = (scene, gameState, routeObjs) => {
   const bg = scene.add.image(0, 0, 'map').setScale(mapScale).setOrigin(0);
   bg.setDepth(-1);
 
-  routeObjs.forEach((r, i) => {
+  routeObjs.forEach((r) => {
     const o = r.obj;
     o.setVisible(true);
 
@@ -173,39 +180,24 @@ export const renderBoard = (scene, routeObjs) => {
     const [city1, city2] = data.cities;
     const pos1 = boardCoords[city1].coords;
     const pos2 = boardCoords[city2].coords;
-    const nTrains = data.length;
 
     setRectangleProps(o, pos1, pos2);
 
-    const { trainAngle, trainCoords } = getTrainCoords(pos1, pos2, nTrains);
+    data.tracks.forEach((track) => {
+      const ownerId = track.owner;
+      const trainCoords = track.coords;
 
-    if (data.tracks[0].owner) {
-      trainCoords.forEach((t) => {
-        const r = scene.add.rectangle(t[0], t[1], tWidth, tHeight);
-        r.setFillStyle(colorMap['blue'], 1);
-        r.setAngle(trainAngle);
-      });
-    }
+      if (ownerId) {
+        const player = gameState.getPlayer(ownerId);
+        const trainAngles = calculateTrainAngle(r);
+
+        trainCoords.forEach((t, i) => {
+          const tS = t.map((c) => c * mapScale);
+          const r = scene.add.rectangle(tS[0], tS[1], tWidth, tHeight);
+          r.setFillStyle(colorMap[player.color], 1);
+          r.setAngle(trainAngles[i]);
+        });
+      }
+    });
   });
-
-  // objs.forEach((o, i) => {
-  //   const data = o.getData('data');
-  //   const nTrains = data.number;
-  //   const color = data.tracks[0];
-  //   const [city1, city2] = data.cities;
-
-  //   const c1 = boardCoords[city1];
-  //   const c2 = boardCoords[city2];
-
-  //   const { trainAngle, trainCoords } = getTrainCoords(c1, c2, nTrains);
-
-  //   scene.add.text(c1[0], c1[1], city1);
-  //   scene.add.text(c2[0], c2[1], city2);
-
-  //   trainCoords.forEach((t) => {
-  //     const r = scene.add.rectangle(t[0], t[1], tWidth, tHeight);
-  //     r.setFillStyle(colorMap[color], 1);
-  //     r.setAngle(trainAngle);
-  //   });
-  // });
 };

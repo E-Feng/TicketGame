@@ -30,17 +30,16 @@ export const initEventsListener = (gameState) => {
     const dbEvents = snapshot.val();
     const dbEventKeys = Object.keys(dbEvents);
 
-    const events = gameState.events
+    const events = gameState.events;
     const lastKey = events[events.length - 1]?.id;
 
-    const idx = dbEventKeys.indexOf(lastKey)
+    const idx = dbEventKeys.indexOf(lastKey);
 
     const newEventKeys = [];
     if (idx < 0) {
-      dbEventKeys.forEach(k => newEventKeys.push(k))
+      dbEventKeys.forEach((k) => newEventKeys.push(k));
     } else {
-      console.log(idx, dbEventKeys.slice(idx + 1))
-      dbEventKeys.slice(idx + 1).forEach(k => newEventKeys.push(k))
+      dbEventKeys.slice(idx + 1).forEach((k) => newEventKeys.push(k));
     }
 
     newEventKeys.forEach((key) => {
@@ -118,12 +117,17 @@ export default class Bootstrap extends Phaser.Scene {
       players = Object.keys(snapshot.val());
 
       players.forEach((player, i) => {
-        const text = this.add.text(100, i * 100 + 100, [player]);
+        const text = this.add
+          .text(100, i * 100 + 100, [player])
+          .setFontSize(32);
         texts.push(text);
       });
     });
 
-    this.startButton = this.add.text(200, 300, ['START']).setInteractive();
+    this.startButton = this.add
+      .text(200, 300, ['START'])
+      .setFontSize(32)
+      .setInteractive();
     this.startButton.on('pointerdown', () => this.initGameState());
   }
 }

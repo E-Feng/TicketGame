@@ -3,6 +3,7 @@ import {
   renderHand,
   renderDestCards,
   renderPlayerCard,
+  playerColorMap,
 } from '../helpers/renderer';
 
 const localPlayerId = localStorage.getItem('uid');
@@ -12,6 +13,7 @@ export default class Player {
     this.scene = scene;
 
     this.id = id;
+    this.color = Object.keys(playerColorMap)[order];
     this.order = order;
     this.points = 1;
     this.trainsLeft = NUM_TRAINS;

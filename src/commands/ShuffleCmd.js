@@ -12,7 +12,6 @@ export default class ShuffleCmd extends Command {
     };
 
     if (init) {
-      console.log('sending', payload)
       this.send(this.event);
     }
   }
@@ -21,6 +20,9 @@ export default class ShuffleCmd extends Command {
     let array;
 
     switch (this.payload.array) {
+      case 'players':
+        array = this.players;
+        break;
       case 'deck':
         array = this.deck.cards;
         break;
@@ -28,7 +30,6 @@ export default class ShuffleCmd extends Command {
         array = this.destDeck.destCards;
         break;
     }
-    console.log('shuffling')
     shuffleArray(array, this.payload.seed);
   };
 }

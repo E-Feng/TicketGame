@@ -15,7 +15,6 @@ export default class Command {
   }
 
   send(event) {
-    console.log('sending', event);
     sendEventToFirebase(event);
   }
 

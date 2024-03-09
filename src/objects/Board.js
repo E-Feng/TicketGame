@@ -15,7 +15,7 @@ export default class Board {
   }
 
   render = () => {
-    renderBoard(this.scene, this.routes)
+    renderBoard(this.scene, this.gameState, this.routes)
   }
 
   getRouteById = (id) => this.routes.filter(r => r.id === id)[0]
