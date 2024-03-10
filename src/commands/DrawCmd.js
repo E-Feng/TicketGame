@@ -23,13 +23,15 @@ export default class DrawCmd extends Command {
     const cond2 = this.gameState.isActionContextEmpty();
     const cond3 = this.gameState.actionContextContains('drawAgain');
 
-    const allCond = cond1 && (cond2 || cond3);
+    const cond4 = this.deck.hasCards();
+
+    const allCond = cond1 && (cond2 || cond3) && cond4;
     return allCond;
   };
 
   apply = () => {
     if (this.isLegal()) {
-      const card = this.gameState.deck.draw();
+      const card = this.deck.draw();
       this.player.addCard(card);
 
       this.end();
@@ -45,6 +47,10 @@ export default class DrawCmd extends Command {
       } else {
         this.gameState.addActionContext('drawAgain');
       }
+
+      if (!this.deck.hasCards()) {
+        this.deck.shuffleDiscardIntoDeck();
+      }
     }
 
     this.render();
@@ -52,5 +58,6 @@ export default class DrawCmd extends Command {
 
   render = () => {
     this.player.render();
+    this.deck.render();
   };
 }

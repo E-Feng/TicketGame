@@ -22,9 +22,10 @@ export const FIREBASE_CONFIG = {
 
 export const NUM_MAX_PLAYERS = 5;
 export const NUM_TRAINS = 45;
-export const NUM_START_CARDS = 4;
+export const NUM_START_CARDS = 10;
 export const NUM_FACEUP_CARDS = 5;
-export const NUM_DEST_CARDS = 3;
+export const NUM_START_DEST_CARDS = 3;
+export const NUM_DRAW_DEST_CARDS = 3;
 
 export const COLOR_VALUES = {
   green: 12,

@@ -57,7 +57,9 @@ export default class Route {
     const tracks = this.getOpenTracks();
     const colors = [trackColor, 'grey'];
 
-    const track = tracks.filter((t) => colors.includes(t.color))[0];
+    const track = tracks.filter(
+      (t) => colors.includes(t.color) || trackColor === 'wild'
+    )[0];
 
     track.owner = playerId;
   };

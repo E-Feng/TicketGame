@@ -1,6 +1,7 @@
 import BuildCmd from '../commands/BuildCmd';
 import DrawCmd from '../commands/DrawCmd';
-import DrawFaceUpCardCmd from '../commands/DrawFaceUpCmd';
+import DrawFaceUpCmd from '../commands/DrawFaceUpCmd'
+import DrawDestCmd from '../commands/DrawDestCmd';
 import EndTurnCmd from '../commands/EndTurnCmd';
 import ShuffleCmd from '../commands/ShuffleCmd';
 
@@ -14,8 +15,11 @@ export const createCommand = (command, gameState, player, payload) => {
     case 'draw':
       cmd = new DrawCmd(gameState, player, payload, false);
       break;
-    case 'drawFaceUpCard':
-      cmd = new DrawFaceUpCardCmd(gameState, player, payload, false);
+    case 'drawFaceUp':
+      cmd = new DrawFaceUpCmd(gameState, player, payload, false);
+      break;
+    case 'drawDest':
+      cmd = new DrawDestCmd(gameState, player, payload, false);
       break;
     case 'endTurn':
       cmd = new EndTurnCmd(gameState, player, payload, false);

@@ -1,7 +1,9 @@
 import DestCard from './DestCard';
+import DrawDestCmd from '../commands/DrawDestCmd';
 import { renderDestDeck } from '../helpers/renderer';
-
 import { DESTINATIONS } from '../helpers/settings';
+
+const localPlayerId = localStorage.getItem('uid');
 
 export default class DestDeck {
   constructor(scene, gameState) {
@@ -10,9 +12,9 @@ export default class DestDeck {
     this.destCards = DESTINATIONS.map((d) => new DestCard(scene, this, d));
 
     this.obj.setInteractive();
-    // this.obj.on('pointerdown', () => {
-    //   // new DrawCmd(gameState, playerId, null, true);
-    // });
+    this.obj.on('pointerdown', () => {
+      new DrawDestCmd(gameState, localPlayerId, null, true);
+    });
   }
 
   render = () => renderDestDeck(this);

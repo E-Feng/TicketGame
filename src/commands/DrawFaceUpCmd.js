@@ -13,7 +13,7 @@ export default class DrawFaceUpCmd extends Command {
     this.isWildCard = this.clickedCard.color === 'wild';
 
     this.event = {
-      command: 'drawFaceUpCard',
+      command: 'drawFaceUp',
       playerId: playerId,
       payload: payload,
     };
@@ -52,6 +52,10 @@ export default class DrawFaceUpCmd extends Command {
         new EndTurnCmd(this.gameState, this.playerId, null, true);
       } else {
         this.gameState.addActionContext('drawAgain');
+      }
+
+      if (!this.deck.hasCards()) {
+        this.deck.shuffleDiscardIntoDeck();
       }
     }
 

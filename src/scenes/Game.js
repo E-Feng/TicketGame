@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 import GameState from '../objects/GameState';
-import { initRender } from '../helpers/renderer';
+import { initRender, renderCurrentTurnMessage } from '../helpers/renderer';
 import { createCommand } from '../utils/cmdUtils';
 import { initEventsListener } from './Bootstrap';
 import { COLOR_VALUES } from '../helpers/settings';
@@ -41,24 +41,30 @@ export default class Game extends Phaser.Scene {
       if (this.gameState.events.length >= 3) {
         this.initServerEventsLoaded = true;
         this.gameState.setupGame();
-        initRender(this.gameState);
+        initRender(this);
       }
     }
 
     if (this.gameState.eventsQueue.length > 0) {
-      console.log('invoking', this.gameState.eventsQueue[0].command);
-      const event = this.gameState.eventsQueue.shift();
-      this.gameState.events.push(event);
+      const events = this.gameState.events;
+      const newEvent = this.gameState.eventsQueue.shift();
+      const id = newEvent.id;
 
-      const cmd = createCommand(
-        event.command,
-        this.gameState,
-        event.playerId,
-        event.payload
-      );
-      cmd.apply();
+      if (!events.find((e) => e.id === id)) {
+        console.log("Invoking", newEvent.command)
+        events.push(newEvent);
 
-      console.log(this.gameState);
+        const cmd = createCommand(
+          newEvent.command,
+          this.gameState,
+          newEvent.playerId,
+          newEvent.payload
+        );
+        cmd.apply();
+
+        renderCurrentTurnMessage(this)
+        console.log(this.gameState);
+      }
     }
   }
 }

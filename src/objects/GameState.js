@@ -7,7 +7,7 @@ import ShuffleCmd from '../commands/ShuffleCmd';
 import {
   NUM_FACEUP_CARDS,
   NUM_START_CARDS,
-  NUM_DEST_CARDS,
+  NUM_START_DEST_CARDS,
 } from '../helpers/settings';
 
 let playerId = localStorage.getItem('uid');
@@ -61,7 +61,7 @@ export default class GameState {
         const card = this.deck.draw();
         p.addCard(card);
       }
-      for (let i = 0; i < NUM_DEST_CARDS; i++) {
+      for (let i = 0; i < NUM_START_DEST_CARDS; i++) {
         const destCard = this.destDeck.draw();
         p.addDestCard(destCard);
       }

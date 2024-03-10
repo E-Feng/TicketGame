@@ -1,5 +1,7 @@
 import { calculateTrainAngle, setRectangleProps } from '../utils/funcs';
 
+const localPlayerId = localStorage.getItem('uid');
+
 const mapScale = 0.7;
 
 export const width = 1600;
@@ -10,15 +12,16 @@ const mapHeight = 1212 * mapScale;
 
 const cardsX = mapWidth + 75;
 
-export const initRender = (gameState) => {
-  gameState.faceUpCards.render();
-  gameState.board.render();
-  gameState.deck.render();
-  gameState.destDeck.render();
-  gameState.players.forEach((p) => p.render());
+export const initRender = (scene) => {
+  scene.gameState.faceUpCards.render();
+  scene.gameState.board.render();
+  scene.gameState.deck.render();
+  scene.gameState.destDeck.render();
+  scene.gameState.players.forEach((p) => p.render());
+  renderCurrentTurnMessage(scene)
 };
 
-const handX = 100;
+const handX = 50;
 const handY = 900;
 
 const selectedOffset = 20;
@@ -36,19 +39,20 @@ export const renderCard = (card) => {
   obj.setVisible(true);
 };
 
+const cardOverlap = 40
 export const renderHand = (hand) => {
   hand.forEach((card, i) => {
     const obj = card.obj;
 
-    obj.setPosition(handX + i * 50);
+    obj.setPosition(handX + i * cardOverlap);
     obj.setDepth(i);
 
     renderCard(card);
   });
 };
 
-const destX = 1200;
-const destY = 900;
+const destX = 400;
+const destY = 1000;
 export const renderDestCards = (destCards) => {
   destCards.forEach((card, i) => {
     const objGroup = card.objGroup;
@@ -92,10 +96,18 @@ export const renderPlayerCard = (objGroup) => {
     .setFontSize(24);
 };
 
-export const renderDeck = (deck) => {
-  const obj = deck.obj;
-  obj.setTexture('deck');
-  obj.setPosition(cardsX, 600);
+export const renderDeck = (objs) => {
+  console.log(objs);
+  const deck = objs.deck;
+  deck.setTexture('deck');
+  deck.setPosition(cardsX, 600);
+
+  const counter = objs.counter;
+  counter
+    .setPosition(cardsX + 30, 600 + 10)
+    .setFill('black')
+    .setFontSize(24)
+    .setDepth(5);
 };
 
 export const renderDestDeck = (destDeck) => {
@@ -215,4 +227,29 @@ export const renderBoard = (scene, gameState, routeObjs) => {
       }
     });
   });
+};
+
+export const renderCurrentTurnMessage = (scene) => {
+  const objList = scene.sys.displayList;
+
+  const obj = objList.getByName('currentTurnMessage');
+  if (!obj) {
+    scene.add
+      .text()
+      .setVisible(false)
+      .setName('currentTurnMessage')
+      .setPosition(700, 20)
+      .setFontSize(48)
+      .setFill('black')
+      .setBackgroundColor('gray');
+  } else {
+    const playerId = scene.gameState.getCurrentTurnId();
+
+    const text = 'Your turn';
+    if (localPlayerId === playerId) {
+      obj.setVisible(true).setText(text);
+    } else {
+      obj.setVisible(false);
+    }
+  }
 };

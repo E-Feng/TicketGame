@@ -40,7 +40,6 @@ export default class Player {
     this.updateScoreboard();
 
     if (this.id === localPlayerId) {
-      console.log('rendering cards');
       renderHand(this.hand);
       renderDestCards(this.destCards);
       renderIndicator(this.indicator);

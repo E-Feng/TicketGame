@@ -2,7 +2,7 @@ import DrawFaceUpCmd from '../commands/DrawFaceUpCmd';
 import { renderFaceUpCards } from '../helpers/renderer';
 import { NUM_FACEUP_CARDS } from '../helpers/settings';
 
-let playerId = localStorage.getItem('uid');
+let localPlayerId = localStorage.getItem('uid');
 
 export default class FaceUpCard {
   constructor(scene, gameState) {
@@ -20,7 +20,7 @@ export default class FaceUpCard {
       const obj =  this.scene.add.image()
       obj.setInteractive()
       obj.on('pointerdown', () => {
-        new DrawFaceUpCmd(this.gameState, playerId, i, true);
+        new DrawFaceUpCmd(this.gameState, localPlayerId, i, true);
       });
 
       this.objs.push(obj)

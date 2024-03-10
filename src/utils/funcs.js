@@ -91,11 +91,11 @@ export const calculateTrainAngle = (route) => {
 
       if (a1) tempAngles.push(a1);
       if (a2) tempAngles.push(a2);
-      console.log(tempAngles)
+
       const angle = getArrayAvg(tempAngles);
       trainAngles.push(angle);
     });
   }
-  console.log(trainAngles)
+  
   return trainAngles;
 };
