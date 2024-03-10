@@ -14,7 +14,8 @@ export default class Player {
     this.scene = scene;
 
     this.id = id;
-    this.color = playerColorMap[Object.keys(playerColorMap)[order]];
+    this.colorName = Object.keys(playerColorMap)[order];
+    this.color = playerColorMap[this.colorName];
     this.order = order;
     this.points = 1;
     this.trainsLeft = NUM_TRAINS;

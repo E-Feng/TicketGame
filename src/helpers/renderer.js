@@ -207,9 +207,10 @@ export const renderBoard = (scene, gameState, routeObjs) => {
 
         trainCoords.forEach((t, i) => {
           const tS = t.map((c) => c * mapScale);
-          const r = scene.add.rectangle(tS[0], tS[1], tWidth, tHeight);
-          r.setFillStyle(colorMap[player.color], 1);
-          r.setAngle(trainAngles[i]);
+          const r = scene.add
+            .rectangle(tS[0], tS[1], tWidth, tHeight)
+            .setFillStyle(player.color, 1)
+            .setAngle(trainAngles[i]);
         });
       }
     });

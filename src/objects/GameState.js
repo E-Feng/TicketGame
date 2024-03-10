@@ -43,6 +43,11 @@ export default class GameState {
   setupGame = () => {
     this.currentTurn = this.players[0].id;
 
+    this.players.forEach((p, i) => {
+      p.order = i;
+      p.objGroup.order = i;
+    });
+
     // Deal out faceup cards
     for (let i = 0; i < NUM_FACEUP_CARDS; i++) {
       const card = this.deck.draw();

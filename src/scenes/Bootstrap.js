@@ -26,6 +26,7 @@ export const sendEventToFirebase = (event) => {
 export const initEventsListener = (gameState) => {
   onValue(eventRef, (snapshot) => {
     if (!snapshot.val()) return;
+    console.log("Listener", snapshot)
 
     const dbEvents = snapshot.val();
     const dbEventKeys = Object.keys(dbEvents);
@@ -100,6 +101,7 @@ export default class Bootstrap extends Phaser.Scene {
       if (!ss) return;
 
       const data = { players: players, settings: null };
+      console.log(players)
       this.scene.start('game', data);
     });
   }
