@@ -41,6 +41,7 @@ export default class GameState {
   };
 
   setupGame = () => {
+    console.log("Setting up game....")
     this.currentTurn = this.players[0].id;
 
     this.players.forEach((p, i) => {

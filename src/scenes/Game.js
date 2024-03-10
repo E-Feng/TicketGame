@@ -38,7 +38,7 @@ export default class Game extends Phaser.Scene {
 
   update() {
     if (!this.initServerEventsLoaded) {
-      if (this.gameState.events.length >= 2) {
+      if (this.gameState.events.length >= 3) {
         this.initServerEventsLoaded = true;
         this.gameState.setupGame();
         initRender(this.gameState);
