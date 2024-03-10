@@ -4,6 +4,7 @@ import {
   renderDestCards,
   renderPlayerCard,
   playerColorMap,
+  renderIndicator,
 } from '../helpers/renderer';
 
 const localPlayerId = localStorage.getItem('uid');
@@ -13,15 +14,21 @@ export default class Player {
     this.scene = scene;
 
     this.id = id;
-    this.color = Object.keys(playerColorMap)[order];
+    this.color = playerColorMap[Object.keys(playerColorMap)[order]];
     this.order = order;
     this.points = 1;
     this.trainsLeft = NUM_TRAINS;
     this.hand = [];
     this.destCards = [];
 
+    this.indicator = scene.add
+      .rectangle()
+      .setFillStyle(this.color, 0.5)
+      .setVisible(false);
+
     this.objGroup = {};
     this.objGroup.order = order;
+    this.objGroup.bg = scene.add.rectangle().setFillStyle(this.color, 0.5);
     this.objGroup.points = scene.add.text(0, 0, this.points);
     this.objGroup.trainsLeft = scene.add.text(0, 0, this.trainsLeft);
     this.objGroup.handSize = scene.add.text(0, 0, this.hand.length);
@@ -35,6 +42,7 @@ export default class Player {
       console.log('rendering cards');
       renderHand(this.hand);
       renderDestCards(this.destCards);
+      renderIndicator(this.indicator);
     }
     renderPlayerCard(this.objGroup);
   };

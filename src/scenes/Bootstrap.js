@@ -72,7 +72,7 @@ export default class Bootstrap extends Phaser.Scene {
     initializeApp(FIREBASE_CONFIG);
 
     const db = getDatabase();
-    const roomId = Math.floor(new Date().getTime() / 5000);
+    const roomId = Math.floor(new Date().getTime() / 10000);
 
     eventRef = ref(db, `${roomId}/events/`);
     playerRef = ref(db, `${roomId}/players/`);

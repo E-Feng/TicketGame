@@ -64,11 +64,25 @@ export const renderDestCards = (destCards) => {
   });
 };
 
+export const renderIndicator = (obj) => {
+  obj
+    .setPosition(width / 2, height / 2)
+    .setSize(width, height)
+    .setDepth(-2)
+    .setVisible(true);
+};
+
 const scoreX = cardsX + 80;
 const scoreY = 150;
+const playerCardWidth = 90;
 const playerCardHeight = 120;
 export const renderPlayerCard = (objGroup) => {
   const offset = (objGroup.order - 1) * playerCardHeight;
+
+  objGroup.bg
+    .setPosition(scoreX + 30, scoreY + offset + 40)
+    .setSize(playerCardWidth, playerCardHeight)
+    .setDepth(-1);
 
   objGroup.points.setPosition(scoreX, scoreY + offset).setFontSize(24);
   objGroup.trainsLeft.setPosition(scoreX, scoreY + 20 + offset).setFontSize(24);
@@ -104,7 +118,7 @@ export const renderFaceUpCards = (objs) => {
 
 export const playerColorMap = {
   red: 0xff0000,
-  blue: 0x0000ff,
+  blue: 0x0096ff,
   green: 0x00ff00,
   yellow: 0xffff00,
   orange: 0xffa500,
@@ -112,7 +126,7 @@ export const playerColorMap = {
 
 const colorMap = {
   red: 0xff0000,
-  blue: 0x0000ff,
+  blue: 0x0096ff,
   green: 0x00ff00,
   pink: 0xffc0cb,
   white: 0xffffff,
