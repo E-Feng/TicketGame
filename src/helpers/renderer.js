@@ -66,10 +66,10 @@ export const renderDestCards = (destCards) => {
 
 export const renderIndicator = (obj) => {
   obj
+    .setVisible(true)
     .setPosition(width / 2, height / 2)
     .setSize(width, height)
-    .setDepth(-2)
-    .setVisible(true);
+    .setDepth(-5);
 };
 
 const scoreX = cardsX + 80;
