@@ -19,6 +19,8 @@ let selfRef;
 
 let players;
 
+let isEventsListenerRunning = false;
+
 export const sendEventToFirebase = (event) => {
   push(eventRef, event);
 };
@@ -26,7 +28,10 @@ export const sendEventToFirebase = (event) => {
 export const initEventsListener = (gameState) => {
   onValue(eventRef, (snapshot) => {
     if (!snapshot.val()) return;
-    console.log("Listener", snapshot)
+    if (isEventsListenerRunning) return;
+
+    isEventsListenerRunning = true;
+    console.log('Listener', snapshot);
 
     const dbEvents = snapshot.val();
     const dbEventKeys = Object.keys(dbEvents);
@@ -50,6 +55,8 @@ export const initEventsListener = (gameState) => {
       };
       gameState.eventsQueue.push(event);
     });
+
+    isEventsListenerRunning = false;
   });
 };
 
@@ -101,7 +108,7 @@ export default class Bootstrap extends Phaser.Scene {
       if (!ss) return;
 
       const data = { players: players, settings: null };
-      console.log(players)
+      console.log(players);
       this.scene.start('game', data);
     });
   }
