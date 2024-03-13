@@ -1,3 +1,4 @@
+import ConfirmButton from './ConfirmButton';
 import { NUM_TRAINS } from '../helpers/settings';
 import {
   renderHand,
@@ -5,12 +6,14 @@ import {
   renderPlayerCard,
   playerColorMap,
   renderIndicator,
+  renderConfirmButton,
+  renderBoard
 } from '../helpers/renderer';
 
 const localPlayerId = localStorage.getItem('uid');
 
 export default class Player {
-  constructor(scene, id, order) {
+  constructor(scene, gameState, id, order) {
     this.scene = scene;
 
     this.id = id;
@@ -21,10 +24,13 @@ export default class Player {
     this.trainsLeft = NUM_TRAINS;
     this.hand = [];
     this.destCards = [];
+    this.pendingDestCards = [];
+
+    this.confirmButton = new ConfirmButton(scene, gameState)
 
     this.indicator = scene.add
       .rectangle()
-      .setFillStyle(this.color, 0.5)
+      .setFillStyle(0xc9d3dc, 1)
       .setVisible(false);
 
     this.objGroup = {};
@@ -41,10 +47,12 @@ export default class Player {
 
     if (this.id === localPlayerId) {
       renderHand(this.hand);
-      renderDestCards(this.destCards);
+      renderDestCards(this.destCards, this.pendingDestCards);
       renderIndicator(this.indicator);
+      renderConfirmButton(this.confirmButton)
+      renderBoard()
     }
-    renderPlayerCard(this.objGroup);
+    renderPlayerCard(this.objGroup, this.scene);
   };
 
   sortCards = (a, b) => {
@@ -65,9 +73,10 @@ export default class Player {
     return card;
   };
 
-  addDestCard = (destCard) => {
-    this.destCards.push(destCard);
-  };
+  addPendingDestCard = (destCard) => this.pendingDestCards.push(destCard);
+  addDestCard = (destCard) => this.destCards.push(destCard);
+  hasPendingDestCards = () => this.pendingDestCards.length > 0;
+  getSelectedDestCards = () => this.pendingDestCards.filter((c) => c.selected);
 
   addPoints = (pts) => (this.points += pts);
   minusTrains = (nTrains) => (this.trainsLeft -= nTrains);

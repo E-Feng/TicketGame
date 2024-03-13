@@ -1,25 +1,67 @@
-import { calculateTrainAngle, setRectangleProps } from '../utils/funcs';
+import { CITIES } from './boardConsts';
+import {
+  calculateTrainAngle,
+  setRectangleProps,
+  addArrays,
+} from '../utils/funcs';
 
 const localPlayerId = localStorage.getItem('uid');
 
-const mapScale = 0.7;
+let scene;
+let gameState;
 
-export const width = 1600;
-export const height = 1080;
+export const initRenderVars = (initScene) => {
+  scene = initScene;
+  gameState = scene.gameState;
+};
 
-const mapWidth = 1894 * mapScale;
-const mapHeight = 1212 * mapScale;
-
-const cardsX = mapWidth + 75;
-
-export const initRender = (scene) => {
+export const initRender = () => {
   scene.gameState.faceUpCards.render();
   scene.gameState.board.render();
   scene.gameState.deck.render();
   scene.gameState.destDeck.render();
   scene.gameState.players.forEach((p) => p.render());
-  renderCurrentTurnMessage(scene)
+  renderCurrentTurnMessage();
 };
+
+const mapScale = 0.7;
+const mapWidth = 1894 * mapScale;
+const mapHeight = 1212 * mapScale;
+
+export const width = 1600;
+export const height = 1080;
+
+const playerCardWidth = 120;
+const playerCardHeight = 150;
+
+export const renderPlayerCard = (objGroup) => {
+  console.log(scene.sys.displayList, gameState);
+  const scoreX = 0;
+  const scoreY = 0;
+
+  const offset = objGroup.order * playerCardHeight;
+
+  objGroup.bg
+    .setPosition(scoreX, scoreY + offset)
+    .setOrigin(0)
+    .setSize(playerCardWidth, playerCardHeight)
+    .setDepth(-1);
+
+  objGroup.points
+    .setPosition(scoreX, scoreY + offset)
+    .setFill('white')
+    .setFontSize(36);
+  objGroup.trainsLeft.setPosition(scoreX, scoreY + 30 + offset).setFontSize(36);
+  objGroup.handSize.setPosition(scoreX, scoreY + 60 + offset).setFontSize(36);
+  objGroup.numDestCards
+    .setPosition(scoreX, scoreY + 90 + offset)
+    .setFontSize(36);
+};
+
+const mapX = playerCardWidth;
+const mapY = 0;
+
+const cardsX = mapX + mapWidth + 75;
 
 const handX = 50;
 const handY = 900;
@@ -39,7 +81,7 @@ export const renderCard = (card) => {
   obj.setVisible(true);
 };
 
-const cardOverlap = 40
+const cardOverlap = 40;
 export const renderHand = (hand) => {
   hand.forEach((card, i) => {
     const obj = card.obj;
@@ -51,49 +93,53 @@ export const renderHand = (hand) => {
   });
 };
 
-const destX = 400;
-const destY = 1000;
-export const renderDestCards = (destCards) => {
-  destCards.forEach((card, i) => {
-    const objGroup = card.objGroup;
+const destX = 200;
+const destY = 975;
+export const renderDestCards = () => {
+  const player = gameState.getPlayer(localPlayerId);
 
-    objGroup.cities
-      .setPosition(destX + i * 75, destY)
-      .setFontSize(24)
-      .setVisible(true);
-    objGroup.points
-      .setPosition(destX + i * 75, destY + 50)
-      .setFontSize(24)
-      .setVisible(true);
+  const destCards = player.destCards;
+  const pendingDestCards = player.pendingDestCards;
+
+  destCards.forEach((card, i) => {
+    const offset = i * 100;
+    renderDestCard(card, offset);
   });
+  pendingDestCards.forEach((card, i) => {
+    const offset = i * 100 + 500;
+    renderDestCard(card, offset);
+  });
+};
+
+export const renderDestCard = (card, offset) => {
+  const objGroup = card.objGroup;
+  const bgColor = card.selected ? 0xdaf7a6 : 0xff5733;
+
+  objGroup.card
+    .setPosition(destX + offset, destY)
+    .setSize(60, 90)
+    .setOrigin(0)
+    .setFillStyle(bgColor, 0.3)
+    .setVisible(true);
+  objGroup.cities
+    .setPosition(destX + offset, destY)
+    .setFontSize(30)
+    .setFill('black')
+    .setVisible(true);
+  objGroup.points
+    .setPosition(destX + offset, destY + 60)
+    .setFontSize(30)
+    .setFill('black')
+    .setVisible(true);
 };
 
 export const renderIndicator = (obj) => {
   obj
     .setVisible(true)
-    .setPosition(width / 2, height / 2)
+    .setOrigin(0)
+    .setPosition(0, 0)
     .setSize(width, height)
     .setDepth(-5);
-};
-
-const scoreX = cardsX + 80;
-const scoreY = 150;
-const playerCardWidth = 90;
-const playerCardHeight = 120;
-export const renderPlayerCard = (objGroup) => {
-  const offset = (objGroup.order - 1) * playerCardHeight;
-
-  objGroup.bg
-    .setPosition(scoreX + 30, scoreY + offset + 40)
-    .setSize(playerCardWidth, playerCardHeight)
-    .setDepth(-1);
-
-  objGroup.points.setPosition(scoreX, scoreY + offset).setFontSize(24);
-  objGroup.trainsLeft.setPosition(scoreX, scoreY + 20 + offset).setFontSize(24);
-  objGroup.handSize.setPosition(scoreX, scoreY + 40 + offset).setFontSize(24);
-  objGroup.numDestCards
-    .setPosition(scoreX, scoreY + 60 + offset)
-    .setFontSize(24);
 };
 
 export const renderDeck = (objs) => {
@@ -140,62 +186,33 @@ const colorMap = {
   red: 0xff0000,
   blue: 0x0096ff,
   green: 0x00ff00,
-  pink: 0xffc0cb,
-  white: 0xffffff,
   black: 0x36454f,
-  grey: 0x808080,
+  // grey: 0x808080,
   yellow: 0xffff00,
   orange: 0xffa500,
+  pink: 0xffc0cb,
+  white: 0xffffff,
 };
-export const boardCoords = {
-  ATL: { coords: [1520, 787] },
-  BOS: { coords: [1857, 205] },
-  CAL: { coords: [403, 97] },
-  CHA: { coords: [1708, 801] },
-  CHI: { coords: [1322, 475] },
-  DAL: { coords: [1058, 988] },
-  DEN: { coords: [721, 673] },
-  DUL: { coords: [1078, 351] },
-  EP: { coords: [696, 1035] },
-  HEL: { coords: [603, 361] },
-  HOU: { coords: [1139, 1066] },
-  KS: { coords: [1058, 638] },
-  LV: { coords: [348, 830] },
-  LR: { coords: [1199, 819] },
-  LA: { coords: [218, 947] },
-  MIA: { coords: [1773, 1116] },
-  MON: { coords: [1717, 87] },
-  NAS: { coords: [1418, 716] },
-  NO: { coords: [1327, 1042] },
-  NY: { coords: [1753, 355] },
-  OKC: { coords: [1018, 812] },
-  OMA: { coords: [1015, 536] },
-  PHX: { coords: [458, 960] },
-  PIT: { coords: [1583, 445] },
-  POR: { coords: [93, 343] },
-  RAL: { coords: [1652, 670] },
-  STL: { coords: [1231, 641] },
-  SLC: { coords: [461, 609] },
-  SF: { coords: [64, 737] },
-  SFE: { coords: [707, 854] },
-  SSM: { coords: [1332, 218] },
-  SEA: { coords: [134, 234] },
-  TOR: { coords: [1550, 262] },
-  VAN: { coords: [141, 131] },
-  WAS: { coords: [1769, 535] },
-  WIN: { coords: [852, 120] },
-};
-Object.keys(boardCoords).forEach((k) => {
-  boardCoords[k].coords = boardCoords[k].coords.map((v) =>
-    Math.round(v * mapScale)
-  );
+
+const flagColors = Object.values(colorMap);
+
+export const CITIES_ADJ = CITIES.map((city) => {
+  const coordsScaled = city.coords.map((c) => c * mapScale);
+  const coordsAdj = addArrays(coordsScaled, [mapX, mapY]);
+
+  return {
+    ...city,
+    coords: coordsAdj,
+  };
 });
 
-const tWidth = 30;
-const tHeight = 15;
+const tWidth = 35;
+const tHeight = 18;
 
-export const renderBoard = (scene, gameState, routeObjs) => {
-  const bg = scene.add.image(0, 0, 'map').setScale(mapScale).setOrigin(0);
+export const renderBoard = () => {
+  const routeObjs = gameState.board.routes;
+
+  const bg = scene.add.image(mapX, mapY, 'map').setScale(mapScale).setOrigin(0);
   bg.setDepth(-1);
 
   routeObjs.forEach((r) => {
@@ -204,8 +221,8 @@ export const renderBoard = (scene, gameState, routeObjs) => {
 
     const data = r;
     const [city1, city2] = data.cities;
-    const pos1 = boardCoords[city1].coords;
-    const pos2 = boardCoords[city2].coords;
+    const pos1 = CITIES_ADJ.filter((c) => c.id === city1)[0].coords;
+    const pos2 = CITIES_ADJ.filter((c) => c.id === city2)[0].coords;
 
     setRectangleProps(o, pos1, pos2);
 
@@ -218,18 +235,46 @@ export const renderBoard = (scene, gameState, routeObjs) => {
         const trainAngles = calculateTrainAngle(r);
 
         trainCoords.forEach((t, i) => {
-          const tS = t.map((c) => c * mapScale);
+          const tS = [t[0] * mapScale + mapX, t[1] * mapScale + mapY];
           const r = scene.add
             .rectangle(tS[0], tS[1], tWidth, tHeight)
             .setFillStyle(player.color, 1)
+            .setStrokeStyle(4, 0x000000)
             .setAngle(trainAngles[i]);
         });
       }
     });
   });
+
+  const rad = 75;
+  const player = gameState.getPlayer(localPlayerId);
+  const destCards = player.destCards;
+
+  const oldObjs = scene.sys.displayList.getAll('name', 'ellipse');
+  if (oldObjs) oldObjs.forEach((o) => o.destroy());
+
+  const allDestCards = destCards.concat(player.pendingDestCards);
+  console.log(allDestCards);
+
+  allDestCards.forEach((destCard, i) => {
+    const color = flagColors[i];
+
+    const [city1, city2] = destCard.cities;
+    const pos1 = CITIES_ADJ.filter((c) => c.id === city1)[0].coords;
+    const pos2 = CITIES_ADJ.filter((c) => c.id === city2)[0].coords;
+
+    scene.add
+      .ellipse(pos1[0], pos1[1], rad, rad)
+      .setFillStyle(color, 0.4)
+      .setName('ellipse');
+    scene.add
+      .ellipse(pos2[0], pos2[1], rad, rad)
+      .setFillStyle(color, 0.4)
+      .setName('ellipse');
+  });
 };
 
-export const renderCurrentTurnMessage = (scene) => {
+export const renderCurrentTurnMessage = () => {
   const objList = scene.sys.displayList;
 
   const obj = objList.getByName('currentTurnMessage');
@@ -238,7 +283,7 @@ export const renderCurrentTurnMessage = (scene) => {
       .text()
       .setVisible(false)
       .setName('currentTurnMessage')
-      .setPosition(700, 20)
+      .setPosition(800, 20)
       .setFontSize(48)
       .setFill('black')
       .setBackgroundColor('gray');
@@ -252,4 +297,14 @@ export const renderCurrentTurnMessage = (scene) => {
       obj.setVisible(false);
     }
   }
+};
+
+export const renderConfirmButton = (button) => {
+  const obj = button.obj;
+
+  obj
+    .setPosition(1400, 1000)
+    .setText('Confirm')
+    .setFill('black')
+    .setFontSize(40);
 };

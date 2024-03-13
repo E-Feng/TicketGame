@@ -1,7 +1,11 @@
 import Phaser from 'phaser';
 
 import GameState from '../objects/GameState';
-import { initRender, renderCurrentTurnMessage } from '../helpers/renderer';
+import {
+  initRenderVars,
+  initRender,
+  renderCurrentTurnMessage,
+} from '../helpers/renderer';
 import { createCommand } from '../utils/cmdUtils';
 import { initEventsListener } from './Bootstrap';
 import { COLOR_VALUES } from '../helpers/settings';
@@ -32,6 +36,7 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
+    initRenderVars(this);
     initEventsListener(this.gameState);
     this.gameState.setupServerEvents();
   }
@@ -41,7 +46,7 @@ export default class Game extends Phaser.Scene {
       if (this.gameState.events.length >= 3) {
         this.initServerEventsLoaded = true;
         this.gameState.setupGame();
-        initRender(this);
+        initRender();
       }
     }
 
@@ -51,7 +56,7 @@ export default class Game extends Phaser.Scene {
       const id = newEvent.id;
 
       if (!events.find((e) => e.id === id)) {
-        console.log("Invoking", newEvent.command)
+        console.log('Invoking', newEvent.command);
         events.push(newEvent);
 
         const cmd = createCommand(
@@ -62,7 +67,7 @@ export default class Game extends Phaser.Scene {
         );
         cmd.apply();
 
-        renderCurrentTurnMessage(this)
+        renderCurrentTurnMessage(this);
         console.log(this.gameState);
       }
     }

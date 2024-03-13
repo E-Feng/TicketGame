@@ -1,6 +1,6 @@
 import Route from './Route';
 import { renderBoard } from '../helpers/renderer';
-import { ROUTES } from '../helpers/settings';
+import { ROUTES } from '../helpers/boardConsts';
 
 let playerId = localStorage.getItem('uid');
 
@@ -15,7 +15,7 @@ export default class Board {
   }
 
   render = () => {
-    renderBoard(this.scene, this.gameState, this.routes)
+    renderBoard()
   }
 
   getRouteById = (id) => this.routes.filter(r => r.id === id)[0]

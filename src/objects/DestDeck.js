@@ -1,7 +1,7 @@
 import DestCard from './DestCard';
 import DrawDestCmd from '../commands/DrawDestCmd';
 import { renderDestDeck } from '../helpers/renderer';
-import { DESTINATIONS } from '../helpers/settings';
+import { DESTINATIONS } from '../helpers/boardConsts';
 
 const localPlayerId = localStorage.getItem('uid');
 
@@ -20,4 +20,5 @@ export default class DestDeck {
   render = () => renderDestDeck(this);
 
   draw = () => this.destCards.pop();
+  discard = (destCard) => this.destCards.unshift(destCard);
 }

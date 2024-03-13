@@ -122,6 +122,8 @@ export default class Bootstrap extends Phaser.Scene {
           .text(100, i * 100 + 100, [player])
           .setFontSize(32);
         texts.push(text);
+
+        // this.initGameState()
       });
     });
 

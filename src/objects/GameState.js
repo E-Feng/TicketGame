@@ -16,7 +16,7 @@ export default class GameState {
   constructor(scene, players, settings) {
     this.scene = scene;
 
-    this.players = players.map((p, i) => new Player(scene, p, i));
+    this.players = players.map((p, i) => new Player(scene, this, p, i));
 
     this.currentTurn = this.players[0].id;
     this.actionContext = [];
@@ -63,7 +63,7 @@ export default class GameState {
       }
       for (let i = 0; i < NUM_START_DEST_CARDS; i++) {
         const destCard = this.destDeck.draw();
-        p.addDestCard(destCard);
+        p.addPendingDestCard(destCard);
       }
     });
   };

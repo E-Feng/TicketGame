@@ -31,7 +31,7 @@ export default class DrawDestCmd extends Command {
     if (this.isLegal()) {
       for (let i = 0; i < NUM_DRAW_DEST_CARDS; i++) {
         const destCard = this.destDeck.draw();
-        this.player.addDestCard(destCard);
+        this.player.addPendingDestCard(destCard);
       }
     }
 
@@ -47,6 +47,8 @@ export default class DrawDestCmd extends Command {
   };
 
   render = () => {
+    console.log('rending dest player')
+
     this.player.render();
   };
 }

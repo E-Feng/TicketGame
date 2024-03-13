@@ -1,4 +1,4 @@
-import { boardCoords } from '../helpers/renderer';
+import { CITIES } from '../helpers/boardConsts';
 
 export const shuffleArray = (array, inputSeed) => {
   const seededRandom = (seed) => {
@@ -63,7 +63,16 @@ const getAngleTwoPoints = (p1, p2) => {
 };
 
 const getArrayAvg = (arr) => {
+  console.log(arr);
   return arr.reduce((a, b) => a + b) / arr.length;
+};
+
+export const addArrays = (arr1, arr2) => {
+  const sum = [];
+  for (let i = 0; i < arr1.length; i++) {
+    sum.push(arr1[i] + arr2[i]);
+  }
+  return sum;
 };
 
 export const calculateTrainAngle = (route) => {
@@ -75,8 +84,8 @@ export const calculateTrainAngle = (route) => {
 
   if (length === 1) {
     const [c1, c2] = route.cities;
-    const point1 = boardCoords[c1].coords;
-    const point2 = boardCoords[c2].coords;
+    const point1 = CITIES.filter((c) => c.id === c1)[0].coords;
+    const point2 = CITIES.filter((c) => c.id === c2)[0].coords;
     const angle = getAngleTwoPoints(point1, point2);
     trainAngles.push(angle);
   } else {
@@ -89,13 +98,13 @@ export const calculateTrainAngle = (route) => {
       const a1 = before ? getAngleTwoPoints(before, c) : null;
       const a2 = after ? getAngleTwoPoints(c, after) : null;
 
-      if (a1) tempAngles.push(a1);
-      if (a2) tempAngles.push(a2);
+      if (a1 !== null) tempAngles.push(a1);
+      if (a2 !== null) tempAngles.push(a2);
 
       const angle = getArrayAvg(tempAngles);
       trainAngles.push(angle);
     });
   }
-  
+
   return trainAngles;
 };
