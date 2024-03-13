@@ -41,12 +41,16 @@ export const renderPlayerCard = (objGroup) => {
 
   const offset = objGroup.order * playerCardHeight;
 
+  const id = objGroup.id
+  const indWidth = id === localPlayerId ? 5 : 0
+  console.log(id, localPlayerId, indWidth)
+
   objGroup.bg
     .setPosition(scoreX, scoreY + offset)
     .setOrigin(0)
     .setSize(playerCardWidth, playerCardHeight)
-    .setDepth(-1);
-
+    .setDepth(-1)
+    .setStrokeStyle(indWidth, 0x000000, 1)
   objGroup.points
     .setPosition(scoreX, scoreY + offset)
     .setFill('white')

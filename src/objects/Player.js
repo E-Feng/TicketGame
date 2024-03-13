@@ -34,6 +34,7 @@ export default class Player {
       .setVisible(false);
 
     this.objGroup = {};
+    this.objGroup.id = id;
     this.objGroup.order = order;
     this.objGroup.bg = scene.add.rectangle().setFillStyle(this.color, 0.5);
     this.objGroup.points = scene.add.text(0, 0, this.points);
