@@ -43,6 +43,7 @@ export default class DrawCmd extends Command {
 
     if (this.playerId === localPlayerId) {
       if (isSecondDraw) {
+        this.gameState.clearActionContext();
         new EndTurnCmd(this.gameState, this.playerId, null, true);
       } else {
         this.gameState.addActionContext('drawAgain');

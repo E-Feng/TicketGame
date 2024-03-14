@@ -66,6 +66,7 @@ export default class GameState {
         p.addPendingDestCard(destCard);
       }
     });
+    this.addActionContext('decideDestCards')
   };
 
   addPlayer = (player) => this.players.push(player);

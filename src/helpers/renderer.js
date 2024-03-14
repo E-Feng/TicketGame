@@ -117,13 +117,13 @@ export const renderDestCards = () => {
 
 export const renderDestCard = (card, offset) => {
   const objGroup = card.objGroup;
-  const bgColor = card.selected ? 0xdaf7a6 : 0xff5733;
+  const strokeColor = card.selected ? 0x00FF00 : 0xff5733;
 
   objGroup.card
     .setPosition(destX + offset, destY)
     .setSize(60, 90)
     .setOrigin(0)
-    .setFillStyle(bgColor, 0.3)
+    .setStrokeStyle(3, strokeColor)
     .setVisible(true);
   objGroup.cities
     .setPosition(destX + offset, destY)

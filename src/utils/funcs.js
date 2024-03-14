@@ -63,7 +63,6 @@ const getAngleTwoPoints = (p1, p2) => {
 };
 
 const getArrayAvg = (arr) => {
-  console.log(arr);
   return arr.reduce((a, b) => a + b) / arr.length;
 };
 
@@ -76,7 +75,6 @@ export const addArrays = (arr1, arr2) => {
 };
 
 export const calculateTrainAngle = (route) => {
-  console.log(route);
   const length = route.getRouteLength();
   const coords = route.tracks[0].coords;
 

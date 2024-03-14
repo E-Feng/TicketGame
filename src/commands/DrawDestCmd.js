@@ -40,6 +40,7 @@ export default class DrawDestCmd extends Command {
 
   end = () => {
     if (this.playerId === localPlayerId) {
+      this.gameState.addActionContext('decideDestCards');
       new EndTurnCmd(this.gameState, this.playerId, null, true);
     }
 
@@ -47,7 +48,7 @@ export default class DrawDestCmd extends Command {
   };
 
   render = () => {
-    console.log('rending dest player')
+    console.log('rending dest player');
 
     this.player.render();
   };

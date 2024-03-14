@@ -49,6 +49,7 @@ export default class DrawFaceUpCmd extends Command {
   end = (clickedCard) => {
     if (this.playerId === localPlayerId) {
       if (clickedCard.color === 'wild' || this.isSecondDraw) {
+        this.gameState.clearActionContext();
         new EndTurnCmd(this.gameState, this.playerId, null, true);
       } else {
         this.gameState.addActionContext('drawAgain');

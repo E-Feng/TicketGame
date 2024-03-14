@@ -17,18 +17,16 @@ export default class DecideDestCmd extends Command {
   }
 
   isLegal = () => {
-    console.log('Confirm testing', this);
-    const cond1 = this.player.hasPendingDestCards();
-    const cond2 = this.player.getSelectedDestCards().length > 0;
+    const minSelected = this.player.destCards ? 1 : 2;
 
-    console.log(this.gameState, cond1, cond2);
+    const cond1 = this.player.hasPendingDestCards();
+    const cond2 = this.player.getSelectedDestCards().length > minSelected;
 
     const allCond = cond1 && cond2;
     return allCond;
   };
 
   apply = () => {
-    console.log(this.payload);
     if (this.isLegal()) {
       const ids = this.payload.id;
 
@@ -36,7 +34,7 @@ export default class DecideDestCmd extends Command {
         if (ids.includes(destCard.id)) {
           this.player.addDestCard(destCard);
         } else {
-          destCard.setVisible(false)
+          destCard.setVisible(false);
           this.destDeck.discard(destCard);
         }
       });
@@ -47,11 +45,13 @@ export default class DecideDestCmd extends Command {
   };
 
   end = () => {
-    this.render()
+    this.gameState.clearActionContext()
+
+    this.render();
   };
 
   render = () => {
     renderDestCards();
-    renderBoard()
+    renderBoard();
   };
 }
