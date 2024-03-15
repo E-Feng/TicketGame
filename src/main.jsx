@@ -7,17 +7,24 @@ import Bootstrap from './scenes/Bootstrap';
 import Game from './scenes/Game.js';
 import { width, height } from './helpers/renderer.js';
 
+const urlParam = window.location.pathname.replace('/', '');
+
 const config = {
   type: Phaser.AUTO,
+  parent: 'phaser',
   width: width,
   height: height,
   scene: [Bootstrap, Game],
+  dom: {
+    createContainer: true,
+  },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
 };
-new Phaser.Game(config);
+const game = new Phaser.Game(config);
+game.roomId = urlParam;
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

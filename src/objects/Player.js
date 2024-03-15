@@ -7,16 +7,17 @@ import {
   playerColorMap,
   renderIndicator,
   renderConfirmButton,
-  renderBoard
+  renderBoard,
 } from '../helpers/renderer';
 
 const localPlayerId = localStorage.getItem('uid');
 
 export default class Player {
-  constructor(scene, gameState, id, order) {
+  constructor(scene, gameState, player, order) {
     this.scene = scene;
 
-    this.id = id;
+    this.id = player.id;
+    this.display = player.display || player.id.slice(0, 4);
     this.colorName = Object.keys(playerColorMap)[order];
     this.color = playerColorMap[this.colorName];
     this.order = order;
@@ -26,7 +27,7 @@ export default class Player {
     this.destCards = [];
     this.pendingDestCards = [];
 
-    this.confirmButton = new ConfirmButton(scene, gameState)
+    this.confirmButton = new ConfirmButton(scene, gameState);
 
     this.indicator = scene.add
       .rectangle()
@@ -34,9 +35,10 @@ export default class Player {
       .setVisible(false);
 
     this.objGroup = {};
-    this.objGroup.id = id;
+    this.objGroup.id = this.id;
     this.objGroup.order = order;
     this.objGroup.bg = scene.add.rectangle().setFillStyle(this.color, 0.5);
+    this.objGroup.display = scene.add.text(0, 0, this.display)
     this.objGroup.points = scene.add.text(0, 0, this.points);
     this.objGroup.trainsLeft = scene.add.text(0, 0, this.trainsLeft);
     this.objGroup.handSize = scene.add.text(0, 0, this.hand.length);
@@ -50,8 +52,8 @@ export default class Player {
       renderHand(this.hand);
       renderDestCards(this.destCards, this.pendingDestCards);
       renderIndicator(this.indicator);
-      renderConfirmButton(this.confirmButton)
-      renderBoard()
+      renderConfirmButton(this.confirmButton);
+      renderBoard();
     }
     renderPlayerCard(this.objGroup, this.scene);
   };

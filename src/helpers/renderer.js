@@ -32,10 +32,10 @@ export const width = 1600;
 export const height = 1080;
 
 const playerCardWidth = 120;
-const playerCardHeight = 150;
+const playerCardHeight = 160;
 
 export const renderPlayerCard = (objGroup) => {
-  console.log(scene.sys.displayList, gameState);
+  // console.log(scene.sys.displayList, gameState);
   const scoreX = 0;
   const scoreY = 0;
 
@@ -43,7 +43,6 @@ export const renderPlayerCard = (objGroup) => {
 
   const id = objGroup.id
   const indWidth = id === localPlayerId ? 5 : 0
-  console.log(id, localPlayerId, indWidth)
 
   objGroup.bg
     .setPosition(scoreX, scoreY + offset)
@@ -51,14 +50,18 @@ export const renderPlayerCard = (objGroup) => {
     .setSize(playerCardWidth, playerCardHeight)
     .setDepth(-1)
     .setStrokeStyle(indWidth, 0x000000, 1)
+  objGroup.display
+  .setPosition(scoreX, scoreY + offset)
+  .setFill('white')
+  .setFontSize(36);
   objGroup.points
-    .setPosition(scoreX, scoreY + offset)
+    .setPosition(scoreX, scoreY + offset + 30)
     .setFill('white')
     .setFontSize(36);
-  objGroup.trainsLeft.setPosition(scoreX, scoreY + 30 + offset).setFontSize(36);
-  objGroup.handSize.setPosition(scoreX, scoreY + 60 + offset).setFontSize(36);
+  objGroup.trainsLeft.setPosition(scoreX, scoreY + 60 + offset).setFontSize(36);
+  objGroup.handSize.setPosition(scoreX, scoreY + 90 + offset).setFontSize(36);
   objGroup.numDestCards
-    .setPosition(scoreX, scoreY + 90 + offset)
+    .setPosition(scoreX, scoreY + 120 + offset)
     .setFontSize(36);
 };
 
@@ -147,7 +150,6 @@ export const renderIndicator = (obj) => {
 };
 
 export const renderDeck = (objs) => {
-  console.log(objs);
   const deck = objs.deck;
   deck.setTexture('deck');
   deck.setPosition(cardsX, 600);
@@ -258,7 +260,6 @@ export const renderBoard = () => {
   if (oldObjs) oldObjs.forEach((o) => o.destroy());
 
   const allDestCards = destCards.concat(player.pendingDestCards);
-  console.log(allDestCards);
 
   allDestCards.forEach((destCard, i) => {
     const color = flagColors[i];

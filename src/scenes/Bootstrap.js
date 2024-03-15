@@ -18,6 +18,7 @@ let playerRef;
 let selfRef;
 
 let players;
+let playerObj;
 
 export const sendEventToFirebase = (event) => {
   push(eventRef, event);
@@ -55,6 +56,7 @@ export const initEventsListener = (gameState) => {
 export default class Bootstrap extends Phaser.Scene {
   constructor() {
     super('bootstrap');
+    // console.log(this.game.roomId)
   }
 
   initGameState() {
@@ -72,7 +74,7 @@ export default class Bootstrap extends Phaser.Scene {
     initializeApp(FIREBASE_CONFIG);
 
     const db = getDatabase();
-    const roomId = Math.floor(new Date().getTime() / 10000);
+    const roomId = this.game.roomId || Math.floor(new Date().getTime() / 10000);
 
     eventRef = ref(db, `${roomId}/events/`);
     playerRef = ref(db, `${roomId}/players/`);
@@ -87,8 +89,13 @@ export default class Bootstrap extends Phaser.Scene {
         const playerId = user.uid;
         localStorage.setItem('uid', playerId);
 
-        selfRef = ref(db, `${roomId}/players/${playerId}`);
-        set(selfRef, playerId);
+        playerObj = {
+          id: playerId,
+          display: '',
+        };
+
+        selfRef = ref(db, `${roomId}/players/${playerId}/`);
+        set(selfRef, playerObj);
 
         onDisconnect(selfRef).remove();
       }
@@ -100,7 +107,7 @@ export default class Bootstrap extends Phaser.Scene {
       if (!ss) return;
 
       const data = { players: players, settings: null };
-      console.log(players);
+
       this.scene.start('game', data);
     });
   }
@@ -108,18 +115,44 @@ export default class Bootstrap extends Phaser.Scene {
   create() {
     const texts = [];
 
+    const htmlInput = `
+      <input type="text" name="name" placeholder="Name" style="font-size: 32px">
+      <input type="button" name="setButton" value="Set" style="font-size: 32px"><br />
+      `;
+    const inputForm = this.add.dom(1000, 200).createFromHTML(htmlInput);
+    inputForm.addListener('click').on('click', (e) => {
+      if (e.target.name === 'setButton') {
+        const displayName = inputForm.getChildByName('name').value;
+
+        if (displayName !== '') {
+          const playerId = localStorage.getItem('uid');
+          playerObj = {
+            display: displayName,
+            id: playerId,
+          };
+          set(selfRef, playerObj);
+        }
+      }
+    });
+
     onValue(playerRef, (snapshot) => {
+      const ss = snapshot.val();
+      if (!ss) return;
+
       texts.forEach((text) => text.destroy());
       texts.length = 0;
 
-      if (!snapshot.val()) return;
-
-      console.log(snapshot.val());
-      players = Object.keys(snapshot.val());
+      players = Object.keys(ss).map(k => {
+        return {
+          id: k,
+          display: ss[k].display
+        }
+      });
 
       players.forEach((player, i) => {
+        const name = player.display || player.id
         const text = this.add
-          .text(100, i * 100 + 100, [player])
+          .text(100, i * 100 + 100, [name])
           .setFontSize(32);
         texts.push(text);
 
@@ -128,7 +161,7 @@ export default class Bootstrap extends Phaser.Scene {
     });
 
     this.startButton = this.add
-      .text(200, 300, ['START'])
+      .text(200, 500, ['START'])
       .setFontSize(32)
       .setInteractive();
     this.startButton.on('pointerdown', () => this.initGameState());
