@@ -137,7 +137,7 @@ export const renderDestCards = () => {
   });
   pendingDestCards.forEach((card, i) => {
     const offset = i * 100 + 500;
-    const fillColor = flagColors[i]
+    const fillColor = flagColors[i + destCards.length]
     renderDestCard(card, offset, fillColor);
   });
 };
