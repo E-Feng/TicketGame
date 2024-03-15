@@ -142,18 +142,16 @@ export default class Bootstrap extends Phaser.Scene {
       texts.forEach((text) => text.destroy());
       texts.length = 0;
 
-      players = Object.keys(ss).map(k => {
+      players = Object.keys(ss).map((k) => {
         return {
           id: k,
-          display: ss[k].display
-        }
+          display: ss[k].display,
+        };
       });
 
       players.forEach((player, i) => {
-        const name = player.display || player.id
-        const text = this.add
-          .text(100, i * 100 + 100, [name])
-          .setFontSize(32);
+        const name = player.display || player.id;
+        const text = this.add.text(100, i * 100 + 100, [name]).setFontSize(32);
         texts.push(text);
 
         // this.initGameState()

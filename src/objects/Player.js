@@ -23,9 +23,11 @@ export default class Player {
     this.order = order;
     this.points = 1;
     this.trainsLeft = NUM_TRAINS;
+
     this.hand = [];
     this.destCards = [];
     this.pendingDestCards = [];
+    this.actionContext = []
 
     this.confirmButton = new ConfirmButton(scene, gameState);
 
@@ -83,6 +85,11 @@ export default class Player {
 
   addPoints = (pts) => (this.points += pts);
   minusTrains = (nTrains) => (this.trainsLeft -= nTrains);
+
+  isActionContextEmpty = () => this.actionContext.length === 0;
+  actionContextContains = (action) => this.actionContext.includes(action);
+  addActionContext = (action) => this.actionContext.push(action);
+  clearActionContext = () => (this.actionContext.length = 0);
 
   updateScoreboard = () => {
     this.objGroup.points.text = `P: ${this.points}`;

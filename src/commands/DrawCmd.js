@@ -20,8 +20,8 @@ export default class DrawCmd extends Command {
   isLegal = () => {
     const cond1 = this.gameState.isPlayersCurrentTurn(this.playerId);
 
-    const cond2 = this.gameState.isActionContextEmpty();
-    const cond3 = this.gameState.actionContextContains('drawAgain');
+    const cond2 = this.player.isActionContextEmpty();
+    const cond3 = this.player.actionContextContains('drawAgain');
 
     const cond4 = this.deck.hasCards();
 
@@ -39,14 +39,14 @@ export default class DrawCmd extends Command {
   };
 
   end = () => {
-    const isSecondDraw = this.gameState.actionContextContains('drawAgain');
+    const isSecondDraw = this.player.actionContextContains('drawAgain');
 
     if (this.playerId === localPlayerId) {
       if (isSecondDraw) {
-        this.gameState.clearActionContext();
+        this.player.clearActionContext();
         new EndTurnCmd(this.gameState, this.playerId, null, true);
       } else {
-        this.gameState.addActionContext('drawAgain');
+        this.player.addActionContext('drawAgain');
       }
 
       if (!this.deck.hasCards()) {

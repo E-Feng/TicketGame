@@ -9,7 +9,7 @@ export default class DrawFaceUpCmd extends Command {
 
     this.clickedCard = gameState.faceUpCards.getCardByIndex(payload);
 
-    this.isSecondDraw = gameState.actionContextContains('drawAgain');
+    this.isSecondDraw = this.player.actionContextContains('drawAgain');
     this.isWildCard = this.clickedCard.color === 'wild';
 
     this.event = {
@@ -25,7 +25,7 @@ export default class DrawFaceUpCmd extends Command {
 
   isLegal = () => {
     const cond1 = this.gameState.getCurrentTurnId() === this.playerId;
-    const cond2 = this.gameState.isActionContextEmpty() || this.isSecondDraw;
+    const cond2 = this.player.isActionContextEmpty() || this.isSecondDraw;
     const cond3 = this.isSecondDraw && this.isWildCard;
 
     const allCond = cond1 && cond2 && !cond3;
@@ -49,10 +49,10 @@ export default class DrawFaceUpCmd extends Command {
   end = (clickedCard) => {
     if (this.playerId === localPlayerId) {
       if (clickedCard.color === 'wild' || this.isSecondDraw) {
-        this.gameState.clearActionContext();
+        this.player.clearActionContext();
         new EndTurnCmd(this.gameState, this.playerId, null, true);
       } else {
-        this.gameState.addActionContext('drawAgain');
+        this.player.addActionContext('drawAgain');
       }
 
       if (!this.deck.hasCards()) {

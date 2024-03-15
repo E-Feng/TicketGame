@@ -19,7 +19,6 @@ export default class GameState {
     this.players = players.map((p, i) => new Player(scene, this, p, i));
 
     this.currentTurn = this.players[0].id;
-    this.actionContext = [];
     this.deck = new Deck(scene, this);
     this.faceUpCards = new FaceUpCard(scene, this);
     this.board = new Board(scene, this);
@@ -65,8 +64,8 @@ export default class GameState {
         const destCard = this.destDeck.draw();
         p.addPendingDestCard(destCard);
       }
+      p.addActionContext('decideDestCards')
     });
-    this.addActionContext('decideDestCards')
   };
 
   addPlayer = (player) => this.players.push(player);
@@ -75,9 +74,4 @@ export default class GameState {
   getCurrentTurnId = () => this.currentTurn;
   setCurrentTurn = (idx) => (this.currentTurn = this.players[idx].id);
   isPlayersCurrentTurn = (id) => this.currentTurn === id;
-
-  isActionContextEmpty = () => this.actionContext.length === 0;
-  actionContextContains = (action) => this.actionContext.includes(action);
-  addActionContext = (action) => this.actionContext.push(action);
-  clearActionContext = () => (this.actionContext.length = 0);
 }

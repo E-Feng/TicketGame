@@ -1,5 +1,9 @@
 import Command from './Command';
-import { renderDestCards, renderBoard } from '../helpers/renderer';
+import {
+  renderDestCards,
+  renderBoard,
+  renderConfirmButton,
+} from '../helpers/renderer';
 
 export default class DecideDestCmd extends Command {
   constructor(gameState, playerId, payload, init) {
@@ -10,6 +14,7 @@ export default class DecideDestCmd extends Command {
       playerId: playerId,
       payload: payload,
     };
+    this.selectedIds = payload.selectedIds;
 
     if (this.isLegal() && init) {
       this.send(this.event);
@@ -17,21 +22,20 @@ export default class DecideDestCmd extends Command {
   }
 
   isLegal = () => {
-    const minSelected = this.player.destCards ? 1 : 2;
+    const minSelected = this.player.destCards.length ? 1 : 2;
 
     const cond1 = this.player.hasPendingDestCards();
-    const cond2 = this.player.getSelectedDestCards().length > minSelected;
+    const cond2 = this.selectedIds.length >= minSelected;
 
     const allCond = cond1 && cond2;
+    console.log(cond1, cond2);
     return allCond;
   };
 
   apply = () => {
     if (this.isLegal()) {
-      const ids = this.payload.id;
-
       this.player.pendingDestCards.forEach((destCard) => {
-        if (ids.includes(destCard.id)) {
+        if (this.selectedIds.includes(destCard.id)) {
           this.player.addDestCard(destCard);
         } else {
           destCard.setVisible(false);
@@ -45,7 +49,7 @@ export default class DecideDestCmd extends Command {
   };
 
   end = () => {
-    this.gameState.clearActionContext()
+    this.player.clearActionContext();
 
     this.render();
   };
@@ -53,5 +57,6 @@ export default class DecideDestCmd extends Command {
   render = () => {
     renderDestCards();
     renderBoard();
+    this.player.render();
   };
 }

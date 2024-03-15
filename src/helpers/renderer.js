@@ -10,6 +10,28 @@ const localPlayerId = localStorage.getItem('uid');
 let scene;
 let gameState;
 
+export const playerColorMap = {
+  red: 0xff0000,
+  blue: 0x0096ff,
+  green: 0x00ff00,
+  yellow: 0xffff00,
+  orange: 0xffa500,
+};
+
+const colorMap = {
+  red: 0xff0000,
+  blue: 0x0096ff,
+  green: 0x00ff00,
+  black: 0x36454f,
+  // grey: 0x808080,
+  yellow: 0xffff00,
+  orange: 0xffa500,
+  pink: 0xffc0cb,
+  white: 0xffffff,
+};
+
+const flagColors = Object.values(colorMap);
+
 export const initRenderVars = (initScene) => {
   scene = initScene;
   gameState = scene.gameState;
@@ -41,19 +63,19 @@ export const renderPlayerCard = (objGroup) => {
 
   const offset = objGroup.order * playerCardHeight;
 
-  const id = objGroup.id
-  const indWidth = id === localPlayerId ? 5 : 0
+  const id = objGroup.id;
+  const indWidth = id === localPlayerId ? 5 : 0;
 
   objGroup.bg
     .setPosition(scoreX, scoreY + offset)
     .setOrigin(0)
     .setSize(playerCardWidth, playerCardHeight)
     .setDepth(-1)
-    .setStrokeStyle(indWidth, 0x000000, 1)
+    .setStrokeStyle(indWidth, 0x000000, 1);
   objGroup.display
-  .setPosition(scoreX, scoreY + offset)
-  .setFill('white')
-  .setFontSize(36);
+    .setPosition(scoreX, scoreY + offset)
+    .setFill('white')
+    .setFontSize(36);
   objGroup.points
     .setPosition(scoreX, scoreY + offset + 30)
     .setFill('white')
@@ -110,23 +132,26 @@ export const renderDestCards = () => {
 
   destCards.forEach((card, i) => {
     const offset = i * 100;
-    renderDestCard(card, offset);
+    const fillColor = flagColors[i]
+    renderDestCard(card, offset, fillColor);
   });
   pendingDestCards.forEach((card, i) => {
     const offset = i * 100 + 500;
-    renderDestCard(card, offset);
+    const fillColor = flagColors[i]
+    renderDestCard(card, offset, fillColor);
   });
 };
 
-export const renderDestCard = (card, offset) => {
+export const renderDestCard = (card, offset, fillColor) => {
   const objGroup = card.objGroup;
-  const strokeColor = card.selected ? 0x00FF00 : 0xff5733;
+  const strokeColor = card.selected ? 0x00ff00 : 0xff5733;
 
   objGroup.card
     .setPosition(destX + offset, destY)
     .setSize(60, 90)
     .setOrigin(0)
-    .setStrokeStyle(3, strokeColor)
+    .setFillStyle(fillColor, 0.4)
+    .setStrokeStyle(4, strokeColor)
     .setVisible(true);
   objGroup.cities
     .setPosition(destX + offset, destY)
@@ -179,28 +204,6 @@ export const renderFaceUpCards = (objs) => {
     o.setTexture(color);
   });
 };
-
-export const playerColorMap = {
-  red: 0xff0000,
-  blue: 0x0096ff,
-  green: 0x00ff00,
-  yellow: 0xffff00,
-  orange: 0xffa500,
-};
-
-const colorMap = {
-  red: 0xff0000,
-  blue: 0x0096ff,
-  green: 0x00ff00,
-  black: 0x36454f,
-  // grey: 0x808080,
-  yellow: 0xffff00,
-  orange: 0xffa500,
-  pink: 0xffc0cb,
-  white: 0xffffff,
-};
-
-const flagColors = Object.values(colorMap);
 
 export const CITIES_ADJ = CITIES.map((city) => {
   const coordsScaled = city.coords.map((c) => c * mapScale);
@@ -307,9 +310,13 @@ export const renderCurrentTurnMessage = () => {
 export const renderConfirmButton = (button) => {
   const obj = button.obj;
 
+  const player = gameState.getPlayer(localPlayerId);
+  const isVisible = player.hasPendingDestCards();
+
   obj
     .setPosition(1400, 1000)
     .setText('Confirm')
     .setFill('black')
-    .setFontSize(40);
+    .setFontSize(40)
+    .setVisible(isVisible);
 };

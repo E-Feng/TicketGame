@@ -21,7 +21,7 @@ export default class DrawDestCmd extends Command {
 
   isLegal = () => {
     const cond1 = this.gameState.getCurrentTurnId() === this.playerId;
-    const cond2 = this.gameState.isActionContextEmpty();
+    const cond2 = this.player.isActionContextEmpty();
 
     const allCond = cond1 && cond2;
     return allCond;
@@ -40,7 +40,7 @@ export default class DrawDestCmd extends Command {
 
   end = () => {
     if (this.playerId === localPlayerId) {
-      this.gameState.addActionContext('decideDestCards');
+      this.player.addActionContext('decideDestCards');
       new EndTurnCmd(this.gameState, this.playerId, null, true);
     }
 

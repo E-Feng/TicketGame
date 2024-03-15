@@ -22,7 +22,7 @@ export default class BuildCmd extends Command {
 
   isLegal = () => {
     const cond1 = this.gameState.isPlayersCurrentTurn(this.playerId);
-    const cond2 = this.gameState.isActionContextEmpty();
+    const cond2 = this.player.isActionContextEmpty();
 
     const cond3 = this.route.canBuildTrack(this.playerId, this.payment);
 
