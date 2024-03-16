@@ -6,30 +6,30 @@ import DrawDestCmd from '../commands/DrawDestCmd';
 import DecideDestCmd from '../commands/DecideDestCmd';
 import EndTurnCmd from '../commands/EndTurnCmd';
 
-export const createCommand = (command, gameState, player, payload) => {
+export const createCommand = (scene, command, gameState, player, payload) => {
   let cmd;
 
   switch (command) {
     case 'shuffle':
-      cmd = new ShuffleCmd(gameState, null, payload, false);
+      cmd = new ShuffleCmd(scene, gameState, null, payload, false);
       break;
     case 'build':
-      cmd = new BuildCmd(gameState, player, payload, false);
+      cmd = new BuildCmd(scene, gameState, player, payload, false);
       break;
     case 'draw':
-      cmd = new DrawCmd(gameState, player, payload, false);
+      cmd = new DrawCmd(scene, gameState, player, payload, false);
       break;
     case 'drawFaceUp':
-      cmd = new DrawFaceUpCmd(gameState, player, payload, false);
+      cmd = new DrawFaceUpCmd(scene, gameState, player, payload, false);
       break;
     case 'drawDest':
-      cmd = new DrawDestCmd(gameState, player, payload, false);
+      cmd = new DrawDestCmd(scene, gameState, player, payload, false);
       break;
     case 'decideDest':
-      cmd = new DecideDestCmd(gameState, player, payload, false);
+      cmd = new DecideDestCmd(scene, gameState, player, payload, false);
       break;
     case 'endTurn':
-      cmd = new EndTurnCmd(gameState, player, payload, false);
+      cmd = new EndTurnCmd(scene, gameState, player, payload, false);
       break;
   }
 

@@ -5,8 +5,8 @@ import { NUM_DRAW_DEST_CARDS } from '../helpers/settings';
 const localPlayerId = localStorage.getItem('uid');
 
 export default class DrawDestCmd extends Command {
-  constructor(gameState, playerId, payload, init) {
-    super(gameState, playerId, payload);
+  constructor(scene, gameState, playerId, payload, init) {
+    super(scene, gameState, playerId, payload);
 
     this.event = {
       command: 'drawDest',
@@ -41,7 +41,7 @@ export default class DrawDestCmd extends Command {
   end = () => {
     if (this.playerId === localPlayerId) {
       this.player.addActionContext('decideDestCards');
-      new EndTurnCmd(this.gameState, this.playerId, null, true);
+      new EndTurnCmd(this.scene, this.gameState, this.playerId, null, true);
     }
 
     this.render();

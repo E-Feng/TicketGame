@@ -2,7 +2,7 @@ import Board from './Board';
 import Deck from './Deck';
 import Player from './Player';
 import DestDeck from './DestDeck';
-import FaceUpCard from './FaceUpCard';
+import FaceUpCards from './FaceUpCards';
 import ShuffleCmd from '../commands/ShuffleCmd';
 import {
   NUM_FACEUP_CARDS,
@@ -20,7 +20,7 @@ export default class GameState {
 
     this.currentTurn = this.players[0].id;
     this.deck = new Deck(scene, this);
-    this.faceUpCards = new FaceUpCard(scene, this);
+    this.faceUpCards = new FaceUpCards(scene, this);
     this.board = new Board(scene, this);
     this.destDeck = new DestDeck(scene, this);
 
@@ -33,14 +33,14 @@ export default class GameState {
     const shuffleDeckPayload = { array: 'deck', seed: Math.random() };
     const shuffleDestCardsPayload = { array: 'dests', seed: Math.random() };
     if (playerId === this.currentTurn) {
-      new ShuffleCmd(this, this.currentTurn, shufflePlayersPayload, true);
-      new ShuffleCmd(this, this.currentTurn, shuffleDeckPayload, true);
-      new ShuffleCmd(this, this.currentTurn, shuffleDestCardsPayload, true);
+      new ShuffleCmd(this.scene, this, '', shufflePlayersPayload, true);
+      new ShuffleCmd(this.scene, this, '', shuffleDeckPayload, true);
+      new ShuffleCmd(this.scene, this, '', shuffleDestCardsPayload, true);
     }
   };
 
   setupGame = () => {
-    console.log("Setting up game....")
+    console.log('Setting up game....');
     this.currentTurn = this.players[0].id;
 
     this.players.forEach((p, i) => {
@@ -64,7 +64,7 @@ export default class GameState {
         const destCard = this.destDeck.draw();
         p.addPendingDestCard(destCard);
       }
-      p.addActionContext('decideDestCards')
+      p.addActionContext('decideDestCards');
     });
   };
 

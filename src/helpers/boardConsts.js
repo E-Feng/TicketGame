@@ -1121,5 +1121,68 @@ export const DESTINATIONS = [
     id: 30,
     cities: ['WIN', 'LR'],
     points: 11,
+  }
+]
+
+const DESTINATIONS_1910 = [
+  {
+    id: 300,
+    set: '1910',
+    cities: ['OMA', 'NO'],
+    points: 8
+  },
+  {
+    id: 300,
+    set: '1910',
+    cities: ['SEA', 'LV'],
+    points: 10
+  },
+  {
+    id: 300,
+    set: '1910',
+    cities: ['TOR', 'CHA'],
+    points: 6
+  },
+  {
+    id: 300,
+    set: '1910',
+    cities: ['STL', 'MIA'],
+    points: 8
+  },
+  {
+    id: 300,
+    set: '1910',
+    cities: ['MON', 'RAL'],
+    points: 7
+  },
+  {
+    id: 300,
+    set: '1910',
+    cities: ['WAS', 'ATL'],
+    points: 4
+  },
+  {
+    id: 300,
+    set: '1910',
+    cities: ['VAN', 'POR'],
+    points: 2
+  },
+  {
+    id: 300,
+    set: '1910',
+    cities: ['BOS', 'WAS'],
+    points: 4
+  },
+  {
+    id: 300,
+    set: '1910',
+    cities: ['WIN', 'OMA'],
+    points: 6
+  },
+  {
+    id: 300,
+    set: '1910',
+    cities: ['MON', 'CHI'],
+    points: 7
   },
 ];

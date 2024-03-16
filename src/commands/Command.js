@@ -1,7 +1,8 @@
 import { sendEventToFirebase } from '../scenes/Bootstrap';
 
 export default class Command {
-  constructor(gameState, playerId, payload) {
+  constructor(scene, gameState, playerId, payload) {
+    this.scene = scene;
     this.gameState = gameState;
     this.playerId = playerId;
     this.payload = payload;

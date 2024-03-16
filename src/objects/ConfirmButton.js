@@ -14,7 +14,7 @@ export default class ConfirmButton {
         const cards = player.getSelectedDestCards();
         const payload = { selectedIds: cards.map((c) => c.id) };
 
-        new DecideDestCmd(gameState, localPlayerId, payload, true);
+        new DecideDestCmd(scene, gameState, localPlayerId, payload, true);
       });
   }
 }

@@ -2,8 +2,8 @@ import Command from './Command';
 import { shuffleArray } from '../utils/funcs';
 
 export default class ShuffleCmd extends Command {
-  constructor(gameState, playerId, payload, init) {
-    super(gameState, playerId, payload);
+  constructor(scene, gameState, playerId, payload, init) {
+    super(scene, gameState, playerId, payload);
 
     this.event = {
       command: 'shuffle',

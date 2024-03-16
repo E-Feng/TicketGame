@@ -3,8 +3,8 @@ import Command from './Command';
 const localPlayerId = localStorage.getItem('uid');
 
 export default class EndTurnCmd extends Command {
-  constructor(gameState, playerId, payload, init) {
-    super(gameState, playerId, payload);
+  constructor(scene, gameState, playerId, payload, init) {
+    super(scene, gameState, playerId, payload);
 
     this.event = {
       command: 'endTurn',

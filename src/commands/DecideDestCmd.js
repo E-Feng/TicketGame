@@ -6,8 +6,8 @@ import {
 } from '../helpers/renderer';
 
 export default class DecideDestCmd extends Command {
-  constructor(gameState, playerId, payload, init) {
-    super(gameState, playerId, payload);
+  constructor(scene, gameState, playerId, payload, init) {
+    super(scene, gameState, playerId, payload);
 
     this.event = {
       command: 'decideDest',

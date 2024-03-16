@@ -10,12 +10,12 @@ export default class Deck {
   constructor(scene, gameState) {
     this.scene = scene;
     this.gameState = gameState;
+
     this.objs = {};
     this.cards = [];
     this.discardPile = [];
 
     this.initDeck(COLOR_VALUES);
-    this.initObjs();
   }
 
   initDeck = (colors) => {
@@ -28,19 +28,18 @@ export default class Deck {
   };
 
   initObjs = () => {
-    this.objs.deck = this.scene.add
-      .image()
+    this.scene.sys.displayList
+      .getByName('deck')
       .setInteractive()
       .on('pointerdown', () => {
-        new DrawCmd(this.gameState, localPlayerId, null, true);
+        console.log(this.gameState);
+        new DrawCmd(this.scene, this.gameState, localPlayerId, null, true);
       });
 
-    this.objs.counter = this.scene.add.text(0, 0, this.cards.length);
+    // this.objs.counter = this.scene.add.text(0, 0, this.cards.length);
   };
 
   render = () => {
-    this.objs.counter.text = this.cards.length;
-
     renderDeck(this.objs);
   };
 

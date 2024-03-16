@@ -1,11 +1,12 @@
 import Command from './Command';
 import EndTurnCmd from './EndTurnCmd';
+import { drawTween } from '../helpers/tweens';
 
 const localPlayerId = localStorage.getItem('uid');
 
 export default class DrawFaceUpCmd extends Command {
-  constructor(gameState, playerId, payload, init) {
-    super(gameState, playerId, payload);
+  constructor(scene, gameState, playerId, payload, init) {
+    super(scene, gameState, playerId, payload);
 
     this.clickedCard = gameState.faceUpCards.getCardByIndex(payload);
 
@@ -34,6 +35,8 @@ export default class DrawFaceUpCmd extends Command {
 
   apply = () => {
     if (this.isLegal()) {
+      drawTween(this.payload)
+      
       const faceUpCards = this.gameState.faceUpCards;
 
       this.player.addCard(this.clickedCard);
@@ -50,7 +53,7 @@ export default class DrawFaceUpCmd extends Command {
     if (this.playerId === localPlayerId) {
       if (clickedCard.color === 'wild' || this.isSecondDraw) {
         this.player.clearActionContext();
-        new EndTurnCmd(this.gameState, this.playerId, null, true);
+        new EndTurnCmd(this.scene, this.gameState, this.playerId, null, true);
       } else {
         this.player.addActionContext('drawAgain');
       }

@@ -9,6 +9,7 @@ const localPlayerId = localStorage.getItem('uid');
 
 let scene;
 let gameState;
+let displayList;
 
 export const playerColorMap = {
   red: 0xff0000,
@@ -23,21 +24,55 @@ const colorMap = {
   blue: 0x0096ff,
   green: 0x00ff00,
   black: 0x36454f,
-  // grey: 0x808080,
   yellow: 0xffff00,
   orange: 0xffa500,
   pink: 0xffc0cb,
   white: 0xffffff,
+  grey: 0x808080,
 };
 
 const flagColors = Object.values(colorMap);
 
 export const initRenderVars = (initScene) => {
   scene = initScene;
-  gameState = scene.gameState;
+  gameState = initScene.gameState;
+  displayList = scene.sys.displayList;
+
+  console.log(gameState, displayList);
+};
+
+const cardsY = 50;
+const cardsYDelta = 100;
+
+export const initRenderObject = (objName) => {
+  console.log(scene, gameState);
+  const gameStateObj = gameState[objName];
+
+  switch (objName) {
+    case 'deck':
+      scene.add.image(cardsX, 600, 'deck').setName('deck');
+      scene.add
+        .text(cardsX + 30, 610)
+        .setName('deck.counter')
+        .setFill('black')
+        .setFontSize(24);
+      break;
+    case 'faceUpCards':
+      const numFaceUpCards = gameStateObj.numCards;
+      const c = scene.add.container().setName('faceUpCards');
+      for (let i = 0; i < numFaceUpCards; i++) {
+        c.add(scene.add.image().setPosition(cardsX, cardsY + cardsYDelta * i));
+      }
+      break;
+  }
+  gameStateObj.initObjs();
 };
 
 export const initRender = () => {
+  const objs = ['deck', 'faceUpCards'];
+
+  objs.forEach((o) => initRenderObject(o));
+
   scene.gameState.faceUpCards.render();
   scene.gameState.board.render();
   scene.gameState.deck.render();
@@ -122,22 +157,23 @@ export const renderHand = (hand) => {
   });
 };
 
-const destX = 200;
+const destX = 100;
 const destY = 975;
 export const renderDestCards = () => {
-  const player = gameState.getPlayer(localPlayerId);
+  console.log(scene, gameState);
+  const player = scene.gameState.getPlayer(localPlayerId);
 
   const destCards = player.destCards;
   const pendingDestCards = player.pendingDestCards;
 
   destCards.forEach((card, i) => {
     const offset = i * 100;
-    const fillColor = flagColors[i]
+    const fillColor = flagColors[i];
     renderDestCard(card, offset, fillColor);
   });
   pendingDestCards.forEach((card, i) => {
-    const offset = i * 100 + 500;
-    const fillColor = flagColors[i + destCards.length]
+    const offset = i * 100 + 1000;
+    const fillColor = flagColors[i + destCards.length];
     renderDestCard(card, offset, fillColor);
   });
 };
@@ -174,17 +210,9 @@ export const renderIndicator = (obj) => {
     .setDepth(-5);
 };
 
-export const renderDeck = (objs) => {
-  const deck = objs.deck;
-  deck.setTexture('deck');
-  deck.setPosition(cardsX, 600);
-
-  const counter = objs.counter;
-  counter
-    .setPosition(cardsX + 30, 600 + 10)
-    .setFill('black')
-    .setFontSize(24)
-    .setDepth(5);
+export const renderDeck = () => {
+  const count = gameState.deck.cards.length;
+  displayList.getByName('deck.counter').setText(count);
 };
 
 export const renderDestDeck = (destDeck) => {
@@ -193,14 +221,12 @@ export const renderDestDeck = (destDeck) => {
   obj.setPosition(cardsX, 750);
 };
 
-export const renderFaceUpCards = (objs) => {
-  const x = cardsX;
-  const y = 50;
+export const renderFaceUpCards = () => {
+  const cards = gameState.faceUpCards.cards;
+  const objs = displayList.getByName('faceUpCards').getAll();
 
   objs.forEach((o, i) => {
-    const color = o.getData('color');
-
-    o.setPosition(x, i * 100 + y);
+    const color = cards[i].color;
     o.setTexture(color);
   });
 };
@@ -219,7 +245,7 @@ const tWidth = 35;
 const tHeight = 18;
 
 export const renderBoard = () => {
-  const routeObjs = gameState.board.routes;
+  const routeObjs = scene.gameState.board.routes;
 
   const bg = scene.add.image(mapX, mapY, 'map').setScale(mapScale).setOrigin(0);
   bg.setDepth(-1);
@@ -256,7 +282,7 @@ export const renderBoard = () => {
   });
 
   const rad = 75;
-  const player = gameState.getPlayer(localPlayerId);
+  const player = scene.gameState.getPlayer(localPlayerId);
   const destCards = player.destCards;
 
   const oldObjs = scene.sys.displayList.getAll('name', 'ellipse');
@@ -283,9 +309,9 @@ export const renderBoard = () => {
 };
 
 export const renderCurrentTurnMessage = () => {
-  const objList = scene.sys.displayList;
+  const displayList = scene.sys.displayList;
 
-  const obj = objList.getByName('currentTurnMessage');
+  const obj = displayList.getByName('currentTurnMessage');
   if (!obj) {
     scene.add
       .text()
@@ -310,7 +336,7 @@ export const renderCurrentTurnMessage = () => {
 export const renderConfirmButton = (button) => {
   const obj = button.obj;
 
-  const player = gameState.getPlayer(localPlayerId);
+  const player = scene.gameState.getPlayer(localPlayerId);
   const isVisible = player.hasPendingDestCards();
 
   obj

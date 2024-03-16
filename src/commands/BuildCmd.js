@@ -4,8 +4,8 @@ import EndTurnCmd from './EndTurnCmd';
 const localPlayerId = localStorage.getItem('uid');
 
 export default class BuildCmd extends Command {
-  constructor(gameState, playerId, payload, init) {
-    super(gameState, playerId, payload);
+  constructor(scene, gameState, playerId, payload, init) {
+    super(scene, gameState, playerId, payload);
 
     this.event = {
       command: 'build',
@@ -48,7 +48,7 @@ export default class BuildCmd extends Command {
 
   end = () => {
     if (this.playerId === localPlayerId) {
-      new EndTurnCmd(this.gameState, this.playerId, null, true);
+      new EndTurnCmd(this.scene, this.gameState, this.playerId, null, true);
     }
 
     this.render();

@@ -25,7 +25,7 @@ export default class Route {
       const payment = player.getSelectedCards().map((c) => c.color);
       const payload = { id: this.id, payment: payment };
 
-      new BuildCmd(gameState, localPlayerId, payload, true);
+      new BuildCmd(scene, gameState, localPlayerId, payload, true);
     });
   }
 

@@ -13,7 +13,7 @@ export default class DestDeck {
 
     this.obj.setInteractive();
     this.obj.on('pointerdown', () => {
-      new DrawDestCmd(gameState, localPlayerId, null, true);
+      new DrawDestCmd(scene, gameState, localPlayerId, null, true);
     });
   }
 

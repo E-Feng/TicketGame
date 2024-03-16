@@ -6,6 +6,7 @@ import {
   initRender,
   renderCurrentTurnMessage,
 } from '../helpers/renderer';
+import { initTweenVars } from '../helpers/tweens';
 import { createCommand } from '../utils/cmdUtils';
 import { initEventsListener } from './Bootstrap';
 import { COLOR_VALUES } from '../helpers/settings';
@@ -13,14 +14,9 @@ import { COLOR_VALUES } from '../helpers/settings';
 export default class Game extends Phaser.Scene {
   constructor() {
     super('game');
-    this.gameState;
+    this.gameState = 1;
 
     this.initServerEventsLoaded = false;
-  }
-
-  init(initData) {
-    const { players, settings } = initData;
-    this.gameState = new GameState(this, players, settings);
   }
 
   preload() {
@@ -35,10 +31,15 @@ export default class Game extends Phaser.Scene {
     }
   }
 
-  create() {
-    initRenderVars(this);
+  create(initData) {
+    const { players, settings } = initData;
+    this.gameState = new GameState(this, players, settings);
+
     initEventsListener(this.gameState);
     this.gameState.setupServerEvents();
+
+    initRenderVars(this);
+    initTweenVars(this);
   }
 
   update() {
@@ -60,6 +61,7 @@ export default class Game extends Phaser.Scene {
         events.push(newEvent);
 
         const cmd = createCommand(
+          this,
           newEvent.command,
           this.gameState,
           newEvent.playerId,

@@ -4,38 +4,34 @@ import { NUM_FACEUP_CARDS } from '../helpers/settings';
 
 let localPlayerId = localStorage.getItem('uid');
 
-export default class FaceUpCard {
+export default class FaceUpCards {
   constructor(scene, gameState) {
     this.scene = scene;
     this.gameState = gameState;
 
+    this.numCards = NUM_FACEUP_CARDS;
     this.cards = Array(NUM_FACEUP_CARDS).fill(null);
     this.objs = [];
-
-    this.initObjects();
   }
 
-  initObjects = () => {
-    this.cards.forEach((_, i) => {
-      const obj =  this.scene.add.image()
-      obj.setInteractive()
-      obj.on('pointerdown', () => {
-        new DrawFaceUpCmd(this.gameState, localPlayerId, i, true);
-      });
+  initObjs = () => {
+    const cards = this.scene.sys.displayList.getByName('faceUpCards').getAll();
 
-      this.objs.push(obj)
+    cards.forEach((obj, i) => {
+      obj.setInteractive();
+      obj.on('pointerdown', () => {
+        new DrawFaceUpCmd(this.scene, this.gameState, localPlayerId, i, true);
+      });
     });
   };
 
   render = () => {
-    renderFaceUpCards(this.objs);
+    renderFaceUpCards();
   };
 
   replaceFaceUpCard = (card) => {
     const i = this.cards.findIndex((c) => c === null);
     this.cards[i] = card;
-
-    this.objs[i].setData('color', card.color)
   };
 
   getCardByIndex = (i) => this.cards[i];
