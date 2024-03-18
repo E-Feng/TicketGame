@@ -35,12 +35,10 @@ export default class Deck {
         console.log(this.gameState);
         new DrawCmd(this.scene, this.gameState, localPlayerId, null, true);
       });
-
-    // this.objs.counter = this.scene.add.text(0, 0, this.cards.length);
   };
 
   render = () => {
-    renderDeck(this.objs);
+    renderDeck();
   };
 
   hasCards = () => this.cards.length > 0;

@@ -1,6 +1,7 @@
 import Command from './Command';
 import EndTurnCmd from './EndTurnCmd';
 import { NUM_DRAW_DEST_CARDS } from '../helpers/settings';
+import { drawTween } from '../helpers/tweens';
 
 const localPlayerId = localStorage.getItem('uid');
 
@@ -29,6 +30,8 @@ export default class DrawDestCmd extends Command {
 
   apply = () => {
     if (this.isLegal()) {
+      drawTween({ name: 'destDeck' });
+
       for (let i = 0; i < NUM_DRAW_DEST_CARDS; i++) {
         const destCard = this.destDeck.draw();
         this.player.addPendingDestCard(destCard);
@@ -48,8 +51,6 @@ export default class DrawDestCmd extends Command {
   };
 
   render = () => {
-    console.log('rending dest player');
-
     this.player.render();
   };
 }

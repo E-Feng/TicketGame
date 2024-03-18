@@ -35,8 +35,8 @@ export default class DrawFaceUpCmd extends Command {
 
   apply = () => {
     if (this.isLegal()) {
-      drawTween(this.payload)
-      
+      drawTween({ name: 'faceUpCards', payload: this.payload });
+
       const faceUpCards = this.gameState.faceUpCards;
 
       this.player.addCard(this.clickedCard);

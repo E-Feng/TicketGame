@@ -32,7 +32,7 @@ export default class DrawCmd extends Command {
 
   apply = () => {
     if (this.isLegal()) {
-      drawTween()
+      drawTween({ name: 'deck' });
       const card = this.deck.draw();
       this.player.addCard(card);
 

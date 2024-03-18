@@ -64,19 +64,21 @@ export const initRenderObject = (objName) => {
         c.add(scene.add.image().setPosition(cardsX, cardsY + cardsYDelta * i));
       }
       break;
+    case 'destDeck':
+      scene.add.image(cardsX, 750, 'dest').setName('destDeck');
+      break;
   }
-  gameStateObj.initObjs();
+  gameStateObj?.initObjs();
 };
 
 export const initRender = () => {
-  const objs = ['deck', 'faceUpCards'];
+  const objs = ['deck', 'faceUpCards', 'destDeck'];
 
   objs.forEach((o) => initRenderObject(o));
 
   scene.gameState.faceUpCards.render();
   scene.gameState.board.render();
   scene.gameState.deck.render();
-  scene.gameState.destDeck.render();
   scene.gameState.players.forEach((p) => p.render());
   renderCurrentTurnMessage();
 };
@@ -244,6 +246,11 @@ export const CITIES_ADJ = CITIES.map((city) => {
 const tWidth = 35;
 const tHeight = 18;
 
+export const correctMapCoords = (coords) => {
+  const offset = [mapX, mapY];
+  return coords.map((c, i) => c * mapScale + offset[i]);
+};
+
 export const renderBoard = () => {
   const routeObjs = scene.gameState.board.routes;
 
@@ -270,7 +277,7 @@ export const renderBoard = () => {
         const trainAngles = calculateTrainAngle(r);
 
         trainCoords.forEach((t, i) => {
-          const tS = [t[0] * mapScale + mapX, t[1] * mapScale + mapY];
+          const tS = correctMapCoords(t);
           const r = scene.add
             .rectangle(tS[0], tS[1], tWidth, tHeight)
             .setFillStyle(player.color, 1)

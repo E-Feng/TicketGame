@@ -1,3 +1,4 @@
+import { buildTween } from '../helpers/tweens';
 import Command from './Command';
 import EndTurnCmd from './EndTurnCmd';
 
@@ -31,6 +32,8 @@ export default class BuildCmd extends Command {
 
   apply = () => {
     if (this.isLegal()) {
+      buildTween(this.route, this.player.color)
+
       const trackColor = this.payment[0];
       this.route.setOwner(this.playerId, trackColor);
 

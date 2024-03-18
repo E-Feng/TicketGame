@@ -8,16 +8,18 @@ const localPlayerId = localStorage.getItem('uid');
 export default class DestDeck {
   constructor(scene, gameState) {
     this.scene = scene;
-    this.obj = scene.add.image();
+    this.gameState = gameState;
     this.destCards = DESTINATIONS.map((d) => new DestCard(scene, this, d));
-
-    this.obj.setInteractive();
-    this.obj.on('pointerdown', () => {
-      new DrawDestCmd(scene, gameState, localPlayerId, null, true);
-    });
   }
 
-  render = () => renderDestDeck(this);
+  initObjs = () => {
+    this.scene.sys.displayList
+      .getByName('destDeck')
+      .setInteractive()
+      .on('pointerdown', () => {
+        new DrawDestCmd(this.scene, this.gameState, localPlayerId, null, true);
+      });
+  };
 
   draw = () => this.destCards.pop();
   discard = (destCard) => this.destCards.unshift(destCard);
