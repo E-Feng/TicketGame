@@ -9,17 +9,19 @@ export default class DestDeck {
   constructor(scene, gameState) {
     this.scene = scene;
     this.gameState = gameState;
-    this.destCards = DESTINATIONS.map((d) => new DestCard(scene, this, d));
+    this.destCards = DESTINATIONS.map((d) => new DestCard(scene, gameState, d));
   }
 
   initObjs = () => {
-    this.scene.sys.displayList
-      .getByName('destDeck')
-      .setInteractive()
-      .on('pointerdown', () => {
-        new DrawDestCmd(this.scene, this.gameState, localPlayerId, null, true);
-      });
+    const container = this.scene.sys.displayList.getByName('destDeck');
+    const obj = container.getByName('destDeck');
+
+    obj.setInteractive().on('pointerdown', () => {
+      new DrawDestCmd(this.scene, this.gameState, localPlayerId, null, true);
+    });
   };
+
+  render = () => renderDestDeck();
 
   draw = () => this.destCards.pop();
   discard = (destCard) => this.destCards.unshift(destCard);

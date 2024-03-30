@@ -151,7 +151,10 @@ export default class Bootstrap extends Phaser.Scene {
 
       players.forEach((player, i) => {
         const name = player.display || player.id;
-        const text = this.add.text(100, i * 100 + 100, [name]).setFontSize(32);
+        const text = this.add
+          .text(100, i * 100 + 100, [name])
+          .setFill('black')
+          .setFontSize(32);
         texts.push(text);
 
         // this.initGameState()
@@ -159,7 +162,8 @@ export default class Bootstrap extends Phaser.Scene {
     });
 
     this.startButton = this.add
-      .text(200, 500, ['START'])
+      .text(200, 700, ['START'])
+      .setFill('black')
       .setFontSize(32)
       .setInteractive();
     this.startButton.on('pointerdown', () => this.initGameState());

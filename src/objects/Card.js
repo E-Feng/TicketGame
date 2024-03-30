@@ -1,19 +1,19 @@
 import { renderCard } from '../helpers/renderer';
 
 export default class Card {
-  constructor(scene, color) {
+  constructor(scene, color, id) {
     this.scene = scene;
-    this.obj = scene.add.image().setVisible(false);
     this.color = color;
+    this.id = id;
     this.selected = false;
-
-    this.obj.setTexture(color);
-    this.obj.setAngle(90);
-    this.obj.setPosition(0, 0);
-
-    this.obj.setInteractive();
-    this.obj.on('pointerdown', () => this.toggleSelected());
   }
+
+  initObjs = () => {
+    const container = this.scene.sys.displayList.getByName('cards');
+    const obj = container.getByName(this.id);
+
+    obj.setInteractive().on('pointerdown', () => this.toggleSelected());
+  };
 
   render = () => {
     renderCard(this);
@@ -24,10 +24,7 @@ export default class Card {
     this.render();
   };
 
-  setVisible = () => this.obj.setVisible(true);
-
   setDiscarded = () => {
     this.selected = false;
-    this.obj.setVisible(false);
   };
 }

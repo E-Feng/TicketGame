@@ -1,9 +1,5 @@
 import Command from './Command';
-import {
-  renderDestCards,
-  renderBoard,
-  renderConfirmButton,
-} from '../helpers/renderer';
+import { NUM_KEEP_DEST_CARDS } from '../helpers/settings';
 
 export default class DecideDestCmd extends Command {
   constructor(scene, gameState, playerId, payload, init) {
@@ -22,13 +18,15 @@ export default class DecideDestCmd extends Command {
   }
 
   isLegal = () => {
-    const minSelected = this.player.destCards.length ? 1 : 2;
+    const isInitial = this.player.destCards.length == 0;
+    const minSelected = isInitial
+      ? NUM_KEEP_DEST_CARDS[0]
+      : NUM_KEEP_DEST_CARDS[1];
 
     const cond1 = this.player.hasPendingDestCards();
     const cond2 = this.selectedIds.length >= minSelected;
 
     const allCond = cond1 && cond2;
-    console.log(cond1, cond2);
     return allCond;
   };
 
@@ -38,7 +36,6 @@ export default class DecideDestCmd extends Command {
         if (this.selectedIds.includes(destCard.id)) {
           this.player.addDestCard(destCard);
         } else {
-          destCard.setVisible(false);
           this.destDeck.discard(destCard);
         }
       });
@@ -55,8 +52,8 @@ export default class DecideDestCmd extends Command {
   };
 
   render = () => {
-    renderDestCards();
-    renderBoard();
+    this.destDeck.render();
+    this.board.render();
     this.player.render();
   };
 }

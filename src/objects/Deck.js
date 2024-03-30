@@ -2,7 +2,7 @@ import Card from './Card';
 import DrawCmd from '../commands/DrawCmd';
 import ShuffleCmd from '../commands/ShuffleCmd';
 import { renderDeck } from '../helpers/renderer';
-import { COLOR_VALUES } from '../helpers/settings';
+import { TRAIN_COLORS_SETUP } from '../helpers/settings';
 
 let localPlayerId = localStorage.getItem('uid');
 
@@ -11,30 +11,31 @@ export default class Deck {
     this.scene = scene;
     this.gameState = gameState;
 
-    this.objs = {};
     this.cards = [];
     this.discardPile = [];
 
-    this.initDeck(COLOR_VALUES);
+    this.initDeck();
   }
 
-  initDeck = (colors) => {
-    for (const color of Object.keys(colors)) {
-      for (let i = 0; i < colors[color]; i++) {
-        const card = new Card(this.scene, color);
+  initDeck = () => {
+    let id = 0;
+
+    TRAIN_COLORS_SETUP.forEach((colorInfo) => {
+      for (let i = 0; i < colorInfo.number; i++) {
+        const card = new Card(this.scene, colorInfo.color, id);
         this.cards.push(card);
+        id++;
       }
-    }
+    });
   };
 
   initObjs = () => {
-    this.scene.sys.displayList
-      .getByName('deck')
-      .setInteractive()
-      .on('pointerdown', () => {
-        console.log(this.gameState);
-        new DrawCmd(this.scene, this.gameState, localPlayerId, null, true);
-      });
+    const container = this.scene.sys.displayList.getByName('deck');
+    const obj = container.getByName('deck');
+
+    obj.setInteractive().on('pointerdown', () => {
+      new DrawCmd(this.scene, this.gameState, localPlayerId, null, true);
+    });
   };
 
   render = () => {

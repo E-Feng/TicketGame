@@ -21,23 +21,24 @@ export const FIREBASE_CONFIG = {
 };
 
 export const NUM_MAX_PLAYERS = 5;
-export const NUM_TRAINS = 45;
+export const NUM_TRAINS = 5;
+export const NUM_TRAINS_END = 2;
 export const NUM_START_CARDS = 4;
 export const NUM_FACEUP_CARDS = 5;
-export const NUM_START_DEST_CARDS = 3;
-export const NUM_DRAW_DEST_CARDS = 3;
+export const NUM_DRAW_DEST_CARDS = [3, 3];
+export const NUM_KEEP_DEST_CARDS = [2, 1];
 
-export const COLOR_VALUES = {
-  green: 12,
-  yellow: 12,
-  orange: 12,
-  white: 12,
-  black: 12,
-  red: 12,
-  blue: 12,
-  pink: 12,
-  wild: 14,
-};
+export const TRAIN_COLORS_SETUP = [
+  { color: 'green', number: 12 },
+  { color: 'yellow', number: 12 },
+  { color: 'orange', number: 12 },
+  { color: 'white', number: 12 },
+  { color: 'black', number: 12 },
+  { color: 'red', number: 12 },
+  { color: 'blue', number: 12 },
+  { color: 'pink', number: 12 },
+  { color: 'wild', number: 14 },
+];
 
 export const TRAIN_POINTS = {
   1: 1,

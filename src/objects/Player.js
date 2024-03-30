@@ -1,11 +1,10 @@
 import ConfirmButton from './ConfirmButton';
 import { NUM_TRAINS } from '../helpers/settings';
+import { playerColorMap } from '../helpers/colors';
 import {
   renderHand,
   renderDestCards,
   renderPlayerCard,
-  playerColorMap,
-  renderIndicator,
   renderConfirmButton,
   renderBoard,
 } from '../helpers/renderer';
@@ -18,8 +17,8 @@ export default class Player {
 
     this.id = player.id;
     this.display = player.display || player.id.slice(0, 4);
-    this.colorName = Object.keys(playerColorMap)[order];
-    this.color = playerColorMap[this.colorName];
+    this.colorName = playerColorMap[order].name;
+    this.color = playerColorMap[order].code;
     this.order = order;
     this.points = 1;
     this.trainsLeft = NUM_TRAINS;
@@ -27,37 +26,19 @@ export default class Player {
     this.hand = [];
     this.destCards = [];
     this.pendingDestCards = [];
-    this.actionContext = []
+    this.actionContext = [];
 
     this.confirmButton = new ConfirmButton(scene, gameState);
-
-    this.indicator = scene.add
-      .rectangle()
-      .setFillStyle(0xc9d3dc, 1)
-      .setVisible(false);
-
-    this.objGroup = {};
-    this.objGroup.id = this.id;
-    this.objGroup.order = order;
-    this.objGroup.bg = scene.add.rectangle().setFillStyle(this.color, 0.5);
-    this.objGroup.display = scene.add.text(0, 0, this.display)
-    this.objGroup.points = scene.add.text(0, 0, this.points);
-    this.objGroup.trainsLeft = scene.add.text(0, 0, this.trainsLeft);
-    this.objGroup.handSize = scene.add.text(0, 0, this.hand.length);
-    this.objGroup.numDestCards = scene.add.text(0, 0, this.destCards.length);
   }
 
   render = () => {
-    this.updateScoreboard();
-
     if (this.id === localPlayerId) {
-      renderHand(this.hand);
-      renderDestCards(this.destCards, this.pendingDestCards);
-      renderIndicator(this.indicator);
+      renderHand(this);
+      renderDestCards(this);
       renderConfirmButton(this.confirmButton);
       renderBoard();
     }
-    renderPlayerCard(this.objGroup, this.scene);
+    renderPlayerCard(this);
   };
 
   sortCards = (a, b) => {
@@ -81,7 +62,12 @@ export default class Player {
   addPendingDestCard = (destCard) => this.pendingDestCards.push(destCard);
   addDestCard = (destCard) => this.destCards.push(destCard);
   hasPendingDestCards = () => this.pendingDestCards.length > 0;
-  getSelectedDestCards = () => this.pendingDestCards.filter((c) => c.selected);
+  getSelectedDestCards = () =>
+    this.pendingDestCards.filter((c) => c.isSelected);
+
+  calculateDestCardPoints = (destCard) => {
+    this.addPoints(destCard.isCompleted ? destCard.points : -destCard.points);
+  };
 
   addPoints = (pts) => (this.points += pts);
   minusTrains = (nTrains) => (this.trainsLeft -= nTrains);
@@ -90,11 +76,4 @@ export default class Player {
   actionContextContains = (action) => this.actionContext.includes(action);
   addActionContext = (action) => this.actionContext.push(action);
   clearActionContext = () => (this.actionContext.length = 0);
-
-  updateScoreboard = () => {
-    this.objGroup.points.text = `P: ${this.points}`;
-    this.objGroup.trainsLeft.text = `T: ${this.trainsLeft}`;
-    this.objGroup.handSize.text = `C: ${this.hand.length}`;
-    this.objGroup.numDestCards.text = `D: ${this.destCards.length}`;
-  };
 }

@@ -14,7 +14,7 @@ export const shuffleArray = (array, inputSeed) => {
   }
 };
 
-export const setRectangleProps = (o, c1, c2) => {
+export const getRouteProps = (c1, c2) => {
   const [x1, y1, x2, y2] = [...c1, ...c2];
 
   const midX = (x1 + x2) / 2;
@@ -22,10 +22,12 @@ export const setRectangleProps = (o, c1, c2) => {
   const dist = Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
   const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
 
-  o.setPosition(midX, midY);
-  o.setSize(dist, 40);
-  o.setAngle(angle);
-  // o.setStrokeStyle(5, 0xff0000, 1);
+  return {
+    x: midX,
+    y: midY,
+    dist: dist,
+    angle: angle,
+  };
 };
 
 export const getTrainCoords = (c1, c2, n, pos) => {

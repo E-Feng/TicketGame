@@ -1,8 +1,12 @@
 import Route from './Route';
-import { renderBoard } from '../helpers/renderer';
+import {
+  renderBoard,
+  renderCurrentTurnEmoji,
+  renderCurrentTurnMessage,
+} from '../helpers/renderer';
 import { ROUTES } from '../helpers/boardConsts';
 
-let playerId = localStorage.getItem('uid');
+let localPlayerId = localStorage.getItem('uid');
 
 export default class Board {
   constructor(scene, gameState) {
@@ -10,13 +14,15 @@ export default class Board {
     this.gameState = gameState;
 
     this.routes = ROUTES.map((r) => {
-      return new Route(scene, gameState, r)
+      return new Route(scene, gameState, r);
     });
   }
 
   render = () => {
-    renderBoard()
-  }
+    renderBoard();
+    renderCurrentTurnEmoji();
+    renderCurrentTurnMessage();
+  };
 
-  getRouteById = (id) => this.routes.filter(r => r.id === id)[0]
+  getRouteById = (id) => this.routes.filter((r) => r.id === id)[0];
 }

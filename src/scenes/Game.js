@@ -1,15 +1,12 @@
 import Phaser from 'phaser';
 
 import GameState from '../objects/GameState';
-import {
-  initRenderVars,
-  initRender,
-  renderCurrentTurnMessage,
-} from '../helpers/renderer';
+import { initRenderVars, initRender } from '../helpers/renderer';
 import { initTweenVars } from '../helpers/tweens';
+import EndGameCmd from '../commands/EndGameCmd';
 import { createCommand } from '../utils/cmdUtils';
 import { initEventsListener } from './Bootstrap';
-import { COLOR_VALUES } from '../helpers/settings';
+import { TRAIN_COLORS_SETUP } from '../helpers/settings';
 
 export default class Game extends Phaser.Scene {
   constructor() {
@@ -17,6 +14,7 @@ export default class Game extends Phaser.Scene {
     this.gameState = 1;
 
     this.initServerEventsLoaded = false;
+    this.isVictoryScreenStarted = false;
   }
 
   preload() {
@@ -24,11 +22,11 @@ export default class Game extends Phaser.Scene {
 
     this.load.image('map', `map.jpg`);
     this.load.image('deck', `deck.png`);
-    this.load.image('dest', `dest.png`);
+    this.load.image('destDeck', `destDeck.png`);
 
-    for (const color in COLOR_VALUES) {
-      this.load.image(color, `${color}.png`);
-    }
+    TRAIN_COLORS_SETUP.forEach((colorInfo) => {
+      this.load.image(colorInfo.color, `${colorInfo.color}.png`);
+    });
   }
 
   create(initData) {
@@ -69,9 +67,16 @@ export default class Game extends Phaser.Scene {
         );
         cmd.apply();
 
-        renderCurrentTurnMessage(this);
         console.log(this.gameState);
+        console.log(this.sys.displayList);
       }
+    }
+
+    if (this.gameState.isGameOver() && !this.isVictoryScreenStarted) {
+      this.isVictoryScreenStarted = true;
+
+      const cmd = new EndGameCmd(this, this.gameState, null, null)
+      cmd.apply()
     }
   }
 }

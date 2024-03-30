@@ -7,7 +7,7 @@ import ShuffleCmd from '../commands/ShuffleCmd';
 import {
   NUM_FACEUP_CARDS,
   NUM_START_CARDS,
-  NUM_START_DEST_CARDS,
+  NUM_DRAW_DEST_CARDS,
 } from '../helpers/settings';
 
 let playerId = localStorage.getItem('uid');
@@ -18,6 +18,7 @@ export default class GameState {
 
     this.players = players.map((p, i) => new Player(scene, this, p, i));
 
+    this.status = 'started';
     this.currentTurn = this.players[0].id;
     this.deck = new Deck(scene, this);
     this.faceUpCards = new FaceUpCards(scene, this);
@@ -45,7 +46,6 @@ export default class GameState {
 
     this.players.forEach((p, i) => {
       p.order = i;
-      p.objGroup.order = i;
     });
 
     // Deal out faceup cards
@@ -60,7 +60,7 @@ export default class GameState {
         const card = this.deck.draw();
         p.addCard(card);
       }
-      for (let i = 0; i < NUM_START_DEST_CARDS; i++) {
+      for (let i = 0; i < NUM_DRAW_DEST_CARDS[0]; i++) {
         const destCard = this.destDeck.draw();
         p.addPendingDestCard(destCard);
       }
@@ -74,4 +74,16 @@ export default class GameState {
   getCurrentTurnId = () => this.currentTurn;
   setCurrentTurn = (idx) => (this.currentTurn = this.players[idx].id);
   isPlayersCurrentTurn = (id) => this.currentTurn === id;
+
+  beginFinalTurn = () => (this.status = 'finalTurn');
+  isFinalTurn = () => this.status === 'finalTurn';
+  isGameOver = () => {
+    let isGameOver = true;
+    this.players.forEach((p) => {
+      if (!p.actionContextContains('gameOver')) {
+        isGameOver = false;
+      }
+    });
+    return isGameOver;
+  };
 }

@@ -62,5 +62,6 @@ export default class DrawCmd extends Command {
   render = () => {
     this.player.render();
     this.deck.render();
+    this.board.render()
   };
 }

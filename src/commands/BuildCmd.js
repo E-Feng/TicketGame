@@ -1,6 +1,10 @@
-import { buildTween } from '../helpers/tweens';
+import { buildDiscardTween, buildTween } from '../helpers/tweens';
 import Command from './Command';
 import EndTurnCmd from './EndTurnCmd';
+import {
+  getPlayersLongestTrack,
+  markCompletedDests,
+} from '../helpers/routeMath';
 
 const localPlayerId = localStorage.getItem('uid');
 
@@ -26,14 +30,13 @@ export default class BuildCmd extends Command {
     const cond2 = this.player.isActionContextEmpty();
 
     const cond3 = this.route.canBuildTrack(this.playerId, this.payment);
+    const cond4 = this.player.trainsLeft >= this.route.length;
 
-    return cond1 && cond2 && cond3;
+    return cond1 && cond2 && cond3 && cond4;
   };
 
   apply = () => {
     if (this.isLegal()) {
-      buildTween(this.route, this.player.color)
-
       const trackColor = this.payment[0];
       this.route.setOwner(this.playerId, trackColor);
 
@@ -42,14 +45,20 @@ export default class BuildCmd extends Command {
         this.deck.discard(card);
       });
 
-      this.player.addPoints(this.route.getPointValue())
-      this.player.minusTrains(this.route.getRouteLength())
+      this.player.addPoints(this.route.getPointValue());
+      this.player.minusTrains(this.route.getRouteLength());
 
       this.end();
     }
   };
 
   end = () => {
+    buildTween(this.route, this.player.color);
+    buildDiscardTween(this.payment);
+
+    markCompletedDests(this.gameState, localPlayerId);
+    getPlayersLongestTrack(this.gameState);
+
     if (this.playerId === localPlayerId) {
       new EndTurnCmd(this.scene, this.gameState, this.playerId, null, true);
     }

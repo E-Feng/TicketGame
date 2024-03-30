@@ -6,7 +6,7 @@ const localPlayerId = localStorage.getItem('uid');
 export default class Route {
   constructor(scene, gameState, props) {
     this.scene = scene;
-    this.obj = scene.add.rectangle();
+    this.gameState = gameState;
     this.id = props.id;
     this.cities = props.cities;
     this.length = props.length;
@@ -17,17 +17,21 @@ export default class Route {
         coords: props.coords.slice(i * this.length, this.length * (i + 1)),
       };
     });
+  }
 
-    this.obj.setVisible(false);
-    this.obj.setInteractive();
-    this.obj.on('pointerdown', () => {
-      const player = gameState.getPlayer(localPlayerId);
+  initObjs = () => {
+    const container = this.scene.sys.displayList.getByName('board');
+    const obj = container.getByName(`route.${this.id}`);
+
+    obj.setInteractive();
+    obj.on('pointerdown', () => {
+      const player = this.gameState.getPlayer(localPlayerId);
       const payment = player.getSelectedCards().map((c) => c.color);
       const payload = { id: this.id, payment: payment };
 
-      new BuildCmd(scene, gameState, localPlayerId, payload, true);
+      new BuildCmd(this.scene, this.gameState, localPlayerId, payload, true);
     });
-  }
+  };
 
   getRouteLength = () => this.length;
   getPointValue = () => TRAIN_POINTS[this.length];

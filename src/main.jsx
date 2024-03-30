@@ -14,6 +14,7 @@ const config = {
   parent: 'phaser',
   width: width,
   height: height,
+  backgroundColor: 0xc9d3dc,
   scene: [Bootstrap, Game],
   dom: {
     createContainer: true,

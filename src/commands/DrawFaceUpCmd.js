@@ -69,5 +69,6 @@ export default class DrawFaceUpCmd extends Command {
   render = () => {
     this.player.render();
     this.faceUpCards.render();
+    this.board.render()
   };
 }

@@ -1,3 +1,12 @@
+export const mapX = 120;
+export const mapY = 0;
+export const mapScale = 0.7;
+
+const correctMapCoords = (coords) => {
+  const offset = [mapX, mapY];
+  return coords.map((c, i) => c * mapScale + offset[i]);
+};
+
 export const CITIES = [
   { id: 'ATL', coords: [1520, 787], display: 'Atlanta' },
   { id: 'BOS', coords: [1857, 205], display: 'Boston' },
@@ -35,7 +44,12 @@ export const CITIES = [
   { id: 'VAN', coords: [141, 131], display: 'Vancouver' },
   { id: 'WAS', coords: [1769, 535], display: 'Washington' },
   { id: 'WIN', coords: [852, 120], display: 'Winnipeg' },
-];
+].map((city) => {
+  return {
+    ...city,
+    coords: correctMapCoords(city.coords),
+  };
+});
 
 export const ROUTES = [
   {
@@ -969,7 +983,12 @@ export const ROUTES = [
       [925, 123],
     ],
   },
-];
+].map((route) => {
+  return {
+    ...route,
+    coords: route.coords.map((coord) => correctMapCoords(coord)),
+  };
+});
 
 export const DESTINATIONS = [
   {
@@ -1121,68 +1140,68 @@ export const DESTINATIONS = [
     id: 30,
     cities: ['WIN', 'LR'],
     points: 11,
-  }
-]
+  },
+];
 
 const DESTINATIONS_1910 = [
   {
     id: 300,
     set: '1910',
     cities: ['OMA', 'NO'],
-    points: 8
+    points: 8,
   },
   {
     id: 300,
     set: '1910',
     cities: ['SEA', 'LV'],
-    points: 10
+    points: 10,
   },
   {
     id: 300,
     set: '1910',
     cities: ['TOR', 'CHA'],
-    points: 6
+    points: 6,
   },
   {
     id: 300,
     set: '1910',
     cities: ['STL', 'MIA'],
-    points: 8
+    points: 8,
   },
   {
     id: 300,
     set: '1910',
     cities: ['MON', 'RAL'],
-    points: 7
+    points: 7,
   },
   {
     id: 300,
     set: '1910',
     cities: ['WAS', 'ATL'],
-    points: 4
+    points: 4,
   },
   {
     id: 300,
     set: '1910',
     cities: ['VAN', 'POR'],
-    points: 2
+    points: 2,
   },
   {
     id: 300,
     set: '1910',
     cities: ['BOS', 'WAS'],
-    points: 4
+    points: 4,
   },
   {
     id: 300,
     set: '1910',
     cities: ['WIN', 'OMA'],
-    points: 6
+    points: 6,
   },
   {
     id: 300,
     set: '1910',
     cities: ['MON', 'CHI'],
-    points: 7
+    points: 7,
   },
 ];
