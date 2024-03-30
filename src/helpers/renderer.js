@@ -276,7 +276,7 @@ export const renderDestDeck = () => {
         scene.add
           .text(35, 70, '✔️', { testString: '✔️' })
           .setName('checkmark')
-          .setFontSize(48)
+          .setFontSize(44)
           .setDepth(5)
           .setVisible(false)
       );

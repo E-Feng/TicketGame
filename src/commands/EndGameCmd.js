@@ -34,6 +34,7 @@ export default class EndGameCmd extends Command {
 
         const destCardObj = destCardsContainer.getByName(destCard.id);
         destCardObj.setVisible(true).setPosition(pos[0], pos[1]);
+        destCardObj.getByName('card').setFillStyle(p.color, 0.35);
         destCardObj.getByName('checkmark').setText(emoji).setVisible(true);
 
         iDestPos += 1;
