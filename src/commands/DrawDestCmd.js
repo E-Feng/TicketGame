@@ -32,7 +32,7 @@ export default class DrawDestCmd extends Command {
     if (this.isLegal()) {
       drawTween({ name: 'destDeck' });
 
-      for (let i = 0; i < NUM_DRAW_DEST_CARDS[1]; i++) {
+      for (let i = 0; i < this.settings.NUM_DRAW_DEST_CARDS[1]; i++) {
         const destCard = this.destDeck.draw();
         this.player.addPendingDestCard(destCard);
       }

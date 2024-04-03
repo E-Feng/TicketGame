@@ -7,6 +7,7 @@ export default class Command {
     this.playerId = playerId;
     this.payload = payload;
 
+    this.settings = gameState.settings;
     this.board = gameState.board;
     this.players = gameState.players;
     this.player = gameState.getPlayer(playerId);

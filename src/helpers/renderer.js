@@ -533,7 +533,7 @@ export const renderCurrentTurnMessage = () => {
   const currentPlayerId = scene.gameState.getCurrentTurnId();
   const player = scene.gameState.getPlayer(localPlayerId);
 
-  const NUM_KEEP_DEST_CARDS = this.gameState.settings.NUM_KEEP_DEST_CARDS;
+  const NUM_KEEP_DEST_CARDS = scene.gameState.settings.NUM_KEEP_DEST_CARDS;
 
   const isInitial = player.destCards.length == 0;
   const minKeep = isInitial ? NUM_KEEP_DEST_CARDS[0] : NUM_KEEP_DEST_CARDS[1];

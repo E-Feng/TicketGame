@@ -17,7 +17,7 @@ export default class DecideDestCmd extends Command {
   }
 
   isLegal = () => {
-    const NUM_KEEP_DEST_CARDS = this.gameState.settings.NUM_KEEP_DEST_CARDS;
+    const NUM_KEEP_DEST_CARDS = this.settings.NUM_KEEP_DEST_CARDS;
 
     const isInitial = this.player.destCards.length == 0;
     const minSelected = isInitial

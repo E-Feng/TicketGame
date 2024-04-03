@@ -103,6 +103,7 @@ export default class Bootstrap extends Phaser.Scene {
 
     // Setting up game state ref
     onValue(initRef, (snapshot) => {
+      console.log(snapshot)
       const ss = snapshot.val();
       if (!ss) return;
 

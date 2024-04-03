@@ -47,6 +47,7 @@ export default class GameState {
     const settings = this.settings;
 
     settings.isSingleBuild = this.players.length <= NUM_PLAYERS_SINGLE_BUILD;
+    settings.NUM_DRAW_DEST_CARDS = NUM_DRAW_DEST_CARDS
     settings.NUM_KEEP_DEST_CARDS = NUM_KEEP_DEST_CARDS
   };
 
