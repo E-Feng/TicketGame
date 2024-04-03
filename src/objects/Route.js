@@ -36,7 +36,14 @@ export default class Route {
   getRouteLength = () => this.length;
   getPointValue = () => TRAIN_POINTS[this.length];
 
-  getOpenTracks = () => this.tracks.filter((t) => t.owner === null);
+  getOpenTracks = () => {
+    const isSingleBuild = this.gameState.settings.isSingleBuild;
+
+    const openTracks = this.tracks.filter((t) => t.owner === null);
+    if (isSingleBuild && openTracks.length < this.tracks.length) return [];
+
+    return openTracks;
+  };
 
   canBuildTrack = (playerId, payment) => {
     const allTracks = this.tracks;

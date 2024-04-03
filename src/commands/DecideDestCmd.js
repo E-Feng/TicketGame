@@ -1,5 +1,4 @@
 import Command from './Command';
-import { NUM_KEEP_DEST_CARDS } from '../helpers/settings';
 
 export default class DecideDestCmd extends Command {
   constructor(scene, gameState, playerId, payload, init) {
@@ -18,6 +17,8 @@ export default class DecideDestCmd extends Command {
   }
 
   isLegal = () => {
+    const NUM_KEEP_DEST_CARDS = this.gameState.settings.NUM_KEEP_DEST_CARDS;
+
     const isInitial = this.player.destCards.length == 0;
     const minSelected = isInitial
       ? NUM_KEEP_DEST_CARDS[0]

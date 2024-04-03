@@ -8,6 +8,8 @@ import {
   NUM_FACEUP_CARDS,
   NUM_START_CARDS,
   NUM_DRAW_DEST_CARDS,
+  NUM_KEEP_DEST_CARDS,
+  NUM_PLAYERS_SINGLE_BUILD,
 } from '../helpers/settings';
 
 let playerId = localStorage.getItem('uid');
@@ -17,6 +19,7 @@ export default class GameState {
     this.scene = scene;
 
     this.players = players.map((p, i) => new Player(scene, this, p, i));
+    this.settings = settings;
 
     this.status = 'started';
     this.currentTurn = this.players[0].id;
@@ -40,8 +43,16 @@ export default class GameState {
     }
   };
 
+  setupSettings = () => {
+    const settings = this.settings;
+
+    settings.isSingleBuild = this.players.length <= NUM_PLAYERS_SINGLE_BUILD;
+    settings.NUM_KEEP_DEST_CARDS = NUM_KEEP_DEST_CARDS
+  };
+
   setupGame = () => {
     console.log('Setting up game....');
+    // Turn order
     this.currentTurn = this.players[0].id;
 
     this.players.forEach((p, i) => {

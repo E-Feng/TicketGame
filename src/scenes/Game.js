@@ -44,6 +44,7 @@ export default class Game extends Phaser.Scene {
     if (!this.initServerEventsLoaded) {
       if (this.gameState.events.length >= 3) {
         this.initServerEventsLoaded = true;
+        this.gameState.setupSettings();
         this.gameState.setupGame();
         initRender();
       }
@@ -75,8 +76,8 @@ export default class Game extends Phaser.Scene {
     if (this.gameState.isGameOver() && !this.isVictoryScreenStarted) {
       this.isVictoryScreenStarted = true;
 
-      const cmd = new EndGameCmd(this, this.gameState, null, null)
-      cmd.apply()
+      const cmd = new EndGameCmd(this, this.gameState, null, null);
+      cmd.apply();
     }
   }
 }

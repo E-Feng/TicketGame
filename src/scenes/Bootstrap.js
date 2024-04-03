@@ -106,7 +106,7 @@ export default class Bootstrap extends Phaser.Scene {
       const ss = snapshot.val();
       if (!ss) return;
 
-      const data = { players: players, settings: null };
+      const data = { players: players, settings: {} };
 
       this.scene.start('game', data);
     });

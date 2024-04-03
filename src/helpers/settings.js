@@ -21,6 +21,7 @@ export const FIREBASE_CONFIG = {
 };
 
 export const NUM_MAX_PLAYERS = 5;
+export const NUM_PLAYERS_SINGLE_BUILD = 3;
 export const NUM_TRAINS = 45;
 export const NUM_TRAINS_END = 2;
 export const NUM_START_CARDS = 4;
