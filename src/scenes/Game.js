@@ -30,21 +30,24 @@ export default class Game extends Phaser.Scene {
   }
 
   create(initData) {
-    const { players, settings } = initData;
-    this.gameState = new GameState(this, players, settings);
+    const { players, settings, events } = initData;
+    const isNewGame = events.length === 0;
 
-    initEventsListener(this.gameState);
-    this.gameState.setupServerEvents();
+    if (isNewGame) {
+      this.gameState = new GameState(this, players, settings);
 
-    initRenderVars(this);
-    initTweenVars(this);
+      initEventsListener(this.gameState);
+      this.gameState.setupServerEvents();
+
+      initRenderVars(this);
+      initTweenVars(this);
+    }
   }
 
   update() {
     if (!this.initServerEventsLoaded) {
       if (this.gameState.events.length >= 3) {
         this.initServerEventsLoaded = true;
-        this.gameState.setupSettings();
         this.gameState.setupGame();
         initRender();
       }

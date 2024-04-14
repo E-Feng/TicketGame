@@ -7,10 +7,10 @@ import ShuffleCmd from '../commands/ShuffleCmd';
 import {
   NUM_FACEUP_CARDS,
   NUM_START_CARDS,
-  NUM_DRAW_DEST_CARDS,
-  NUM_KEEP_DEST_CARDS,
+  DEST_CARD_SETTINGS,
   NUM_PLAYERS_SINGLE_BUILD,
 } from '../helpers/settings';
+import { DESTINATIONS } from '../helpers/boardConsts';
 
 let playerId = localStorage.getItem('uid');
 
@@ -19,7 +19,7 @@ export default class GameState {
     this.scene = scene;
 
     this.players = players.map((p, i) => new Player(scene, this, p, i));
-    this.settings = settings;
+    this.settings = this.setupSettings(settings);
 
     this.status = 'started';
     this.currentTurn = this.players[0].id;
@@ -43,12 +43,21 @@ export default class GameState {
     }
   };
 
-  setupSettings = () => {
-    const settings = this.settings;
+  setupSettings = (mode) => {
+    const settings = {};
+    settings.mode = mode;
 
     settings.isSingleBuild = this.players.length <= NUM_PLAYERS_SINGLE_BUILD;
-    settings.NUM_DRAW_DEST_CARDS = NUM_DRAW_DEST_CARDS
-    settings.NUM_KEEP_DEST_CARDS = NUM_KEEP_DEST_CARDS
+    settings.NUM_DRAW_DEST_CARDS = DEST_CARD_SETTINGS[mode].NUM_DRAW_DEST_CARDS;
+    settings.NUM_KEEP_DEST_CARDS = DEST_CARD_SETTINGS[mode].NUM_KEEP_DEST_CARDS;
+
+    if (mode === 'base') {
+      settings.DESTINATIONS = DESTINATIONS.filter((d) => !d.tags);
+    } else if (mode === 'mega') {
+      settings.DESTINATIONS = DESTINATIONS;
+    }
+
+    return settings;
   };
 
   setupGame = () => {
@@ -72,7 +81,7 @@ export default class GameState {
         const card = this.deck.draw();
         p.addCard(card);
       }
-      for (let i = 0; i < NUM_DRAW_DEST_CARDS[0]; i++) {
+      for (let i = 0; i < this.settings.NUM_DRAW_DEST_CARDS[0]; i++) {
         const destCard = this.destDeck.draw();
         p.addPendingDestCard(destCard);
       }

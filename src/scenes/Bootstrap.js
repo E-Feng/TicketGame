@@ -5,18 +5,24 @@ import {
   getDatabase,
   ref,
   set,
+  get,
   push,
   onValue,
   onDisconnect,
 } from 'firebase/database';
 
-import { FIREBASE_CONFIG } from '../helpers/settings';
+import { FIREBASE_CONFIG } from '../helpers/config';
 
+let rootRef;
 let initRef;
 let eventRef;
-let playerRef;
+let lobbyRef;
+let playersRef;
+let settingsRef;
 let selfRef;
 
+let isGameStarted;
+let settings = 'base';
 let players;
 let playerObj;
 
@@ -56,28 +62,46 @@ export const initEventsListener = (gameState) => {
 export default class Bootstrap extends Phaser.Scene {
   constructor() {
     super('bootstrap');
-    // console.log(this.game.roomId)
   }
 
-  initGameState() {
-    // const gameState = new InitGameState(this);
-    // const gameState = new GameState(this, players)
+  startGame = async () => {
+    set(initRef, true);
 
-    // players.forEach((player) => gameState.addPlayer(player));
-    // gameState.randomizeTurnOrder()
+    let events = [];
 
-    // const data = gameState.getJSONObject();
-    set(initRef, 1);
-  }
+    if (!isGameStarted) {
+      set(playersRef, players);
+    } else {
+      const res = await get(rootRef);
+      const obj = res.val();
 
-  preload() {
+      players = obj.players;
+      settings = obj.settings;
+      events = Object.keys(obj.events).map((k) => {
+        return {
+          id: k,
+          ...obj.events[k],
+        };
+      });
+    }
+
+    const data = { players: players, settings: settings, events: events };
+    console.log(data);
+
+    this.scene.start('game', data);
+  };
+
+  async preload() {
     initializeApp(FIREBASE_CONFIG);
 
     const db = getDatabase();
     const roomId = this.game.roomId || Math.floor(new Date().getTime() / 10000);
 
+    rootRef = ref(db, `${roomId}/`);
     eventRef = ref(db, `${roomId}/events/`);
-    playerRef = ref(db, `${roomId}/players/`);
+    playersRef = ref(db, `${roomId}/players/`);
+    settingsRef = ref(db, `${roomId}/settings/`);
+    lobbyRef = ref(db, `${roomId}/lobby/`);
     initRef = ref(db, `${roomId}/init/`);
 
     // Setting up player, lobby ref
@@ -94,33 +118,28 @@ export default class Bootstrap extends Phaser.Scene {
           display: '',
         };
 
-        selfRef = ref(db, `${roomId}/players/${playerId}/`);
+        selfRef = ref(db, `${roomId}/lobby/${playerId}/`);
         set(selfRef, playerObj);
 
         onDisconnect(selfRef).remove();
       }
     });
 
-    // Setting up game state ref
-    onValue(initRef, (snapshot) => {
-      console.log(snapshot)
-      const ss = snapshot.val();
-      if (!ss) return;
-
-      const data = { players: players, settings: {} };
-
-      this.scene.start('game', data);
-    });
+    // Getting current game status
+    const res = await get(initRef);
+    isGameStarted = res.val();
   }
 
   create() {
-    const texts = [];
-
+    // Display name setting
     const htmlInput = `
       <input type="text" name="name" placeholder="Name" style="font-size: 32px">
       <input type="button" name="setButton" value="Set" style="font-size: 32px"><br />
       `;
-    const inputForm = this.add.dom(1000, 200).createFromHTML(htmlInput);
+    const inputForm = this.add
+      .dom(800, 200)
+      .setOrigin(0)
+      .createFromHTML(htmlInput);
     inputForm.addListener('click').on('click', (e) => {
       if (e.target.name === 'setButton') {
         const displayName = inputForm.getChildByName('name').value;
@@ -136,29 +155,65 @@ export default class Bootstrap extends Phaser.Scene {
       }
     });
 
-    onValue(playerRef, (snapshot) => {
+    // Mode settings
+    const htmlSettings = `
+      <input type="radio" id="base" name="settings" value="base" checked>
+      <label for="base" style="font-size: 32px">Base</label>
+      <input type="radio" id="mega" name="settings" value="mega">
+      <label for="mega" style="font-size: 32px">Mega</label>
+    `;
+    const optionsSelect = this.add
+      .dom(800, 400)
+      .setOrigin(0)
+      .createFromHTML(htmlSettings);
+    optionsSelect.addListener('click').on('click', (e) => {
+      const setting = e.target.value;
+
+      if (!isGameStarted && setting) {
+        set(settingsRef, setting);
+        settings = setting;
+      }
+    });
+
+    onValue(settingsRef, (snapshot) => {
       const ss = snapshot.val();
       if (!ss) return;
 
-      texts.forEach((text) => text.destroy());
-      texts.length = 0;
+      settings = ss;
+      const button = optionsSelect.getChildByID(ss);
+      button.checked = true;
+    });
+
+    // Setting up game state ref
+    onValue(initRef, (snapshot) => {
+      const ss = snapshot.val();
+      if (!ss || !players) return;
+
+      this.startGame();
+    });
+
+    // Setting up lobby/players ref
+    const texts = this.add.container();
+    onValue(lobbyRef, (snapshot) => {
+      const ss = snapshot.val();
+      if (!ss) return;
+
+      texts.removeAll(true);
 
       players = Object.keys(ss).map((k) => {
         return {
           id: k,
-          display: ss[k].display,
+          ...ss[k],
         };
       });
-
       players.forEach((player, i) => {
         const name = player.display || player.id;
-        const text = this.add
-          .text(100, i * 100 + 100, [name])
-          .setFill('black')
-          .setFontSize(32);
-        texts.push(text);
-
-        // this.initGameState()
+        texts.add(
+          this.add
+            .text(100, i * 100 + 100, [name])
+            .setFill('black')
+            .setFontSize(32)
+        );
       });
     });
 
@@ -167,6 +222,6 @@ export default class Bootstrap extends Phaser.Scene {
       .setFill('black')
       .setFontSize(32)
       .setInteractive();
-    this.startButton.on('pointerdown', () => this.initGameState());
+    this.startButton.on('pointerdown', () => this.startGame());
   }
 }

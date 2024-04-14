@@ -3,8 +3,8 @@ export const mapY = 0;
 export const mapScale = 0.7;
 
 const correctMapCoords = (coords) => {
-  const offset = [mapX, mapY];
-  return coords.map((c, i) => c * mapScale + offset[i]);
+  const offtags = [mapX, mapY];
+  return coords.map((c, i) => c * mapScale + offtags[i]);
 };
 
 export const CITIES = [
@@ -1141,67 +1141,238 @@ export const DESTINATIONS = [
     cities: ['WIN', 'LR'],
     points: 11,
   },
-];
-
-const DESTINATIONS_1910 = [
   {
-    id: 300,
-    set: '1910',
-    cities: ['OMA', 'NO'],
-    points: 8,
-  },
-  {
-    id: 300,
-    set: '1910',
-    cities: ['SEA', 'LV'],
-    points: 10,
-  },
-  {
-    id: 300,
-    set: '1910',
-    cities: ['TOR', 'CHA'],
-    points: 6,
-  },
-  {
-    id: 300,
-    set: '1910',
-    cities: ['STL', 'MIA'],
-    points: 8,
-  },
-  {
-    id: 300,
-    set: '1910',
-    cities: ['MON', 'RAL'],
-    points: 7,
-  },
-  {
-    id: 300,
-    set: '1910',
-    cities: ['WAS', 'ATL'],
-    points: 4,
-  },
-  {
-    id: 300,
-    set: '1910',
-    cities: ['VAN', 'POR'],
-    points: 2,
-  },
-  {
-    id: 300,
-    set: '1910',
+    id: 31,
+    tags: ['1910'],
     cities: ['BOS', 'WAS'],
     points: 4,
   },
   {
-    id: 300,
-    set: '1910',
+    id: 32,
+    tags: ['1910'],
+    cities: ['CAL', 'NAS'],
+    points: 14,
+  },
+  {
+    id: 33,
+    tags: ['1910'],
+    cities: ['CHI', 'ATL'],
+    points: 5,
+  },
+  {
+    id: 34,
+    tags: ['1910'],
+    cities: ['CHI', 'BOS'],
+    points: 7,
+  },
+  {
+    id: 35,
+    tags: ['1910'],
+    cities: ['CHI', 'NY'],
+    points: 5,
+  },
+  {
+    id: 36,
+    tags: ['1910'],
+    cities: ['DEN', 'STL'],
+    points: 6,
+  },
+  {
+    id: 37,
+    tags: ['1910'],
+    cities: ['DUL', 'DAL'],
+    points: 7,
+  },
+  {
+    id: 38,
+    tags: ['1910'],
+    cities: ['HOU', 'WAS'],
+    points: 10,
+  },
+  {
+    id: 39,
+    tags: ['1910'],
+    cities: ['KS', 'BOS'],
+    points: 11,
+  },
+  {
+    id: 40,
+    tags: ['1910'],
+    cities: ['LV', 'MIA'],
+    points: 21,
+  },
+  {
+    id: 41,
+    tags: ['1910'],
+    cities: ['LV', 'NY'],
+    points: 19,
+  },
+  {
+    id: 42,
+    tags: ['1910'],
+    cities: ['LA', 'ATL'],
+    points: 15,
+  },
+  {
+    id: 43,
+    tags: ['1910'],
+    cities: ['LA', 'CAL'],
+    points: 12,
+  },
+  {
+    id: 44,
+    tags: ['1910'],
+    cities: ['LA', 'OKC'],
+    points: 9,
+  },
+  {
+    id: 45,
+    tags: ['1910'],
+    cities: ['MON', 'CHI'],
+    points: 7,
+  },
+  {
+    id: 46,
+    tags: ['1910'],
+    cities: ['MON', 'DAL'],
+    points: 13,
+  },
+  {
+    id: 47,
+    tags: ['1910'],
+    cities: ['MON', 'RAL'],
+    points: 7,
+  },
+  {
+    id: 48,
+    tags: ['1910'],
+    cities: ['NAS', 'NY'],
+    points: 6,
+  },
+  {
+    id: 49,
+    tags: ['1910'],
+    cities: ['NY', 'MIA'],
+    points: 10,
+  },
+  {
+    id: 50,
+    tags: ['1910'],
+    cities: ['OMA', 'NO'],
+    points: 8,
+  },
+  {
+    id: 51,
+    tags: ['1910'],
+    cities: ['PHX', 'BOS'],
+    points: 19,
+  },
+  {
+    id: 52,
+    tags: ['1910'],
+    cities: ['PIT', 'NO'],
+    points: 8,
+  },
+  {
+    id: 53,
+    tags: ['1910'],
+    cities: ['POR', 'HOU'],
+    points: 16,
+  },
+  {
+    id: 54,
+    tags: ['1910'],
+    cities: ['POR', 'PIT'],
+    points: 19,
+  },
+  {
+    id: 55,
+    tags: ['1910'],
+    cities: ['STL', 'MIA'],
+    points: 8,
+  },
+  {
+    id: 56,
+    tags: ['1910'],
+    cities: ['SLC', 'CHI'],
+    points: 11,
+  },
+  {
+    id: 57,
+    tags: ['1910'],
+    cities: ['SLC', 'KS'],
+    points: 7,
+  },
+  {
+    id: 58,
+    tags: ['1910'],
+    cities: ['SF', 'SSM'],
+    points: 17,
+  },
+  {
+    id: 59,
+    tags: ['1910'],
+    cities: ['SF', 'WAS'],
+    points: 21,
+  },
+  {
+    id: 60,
+    tags: ['1910'],
+    cities: ['SSM', 'MIA'],
+    points: 12,
+  },
+  {
+    id: 61,
+    tags: ['1910'],
+    cities: ['SEA', 'LV'],
+    points: 10,
+  },
+  {
+    id: 62,
+    tags: ['1910'],
+    cities: ['SEA', 'OKC'],
+    points: 14,
+  },
+  {
+    id: 63,
+    tags: ['1910'],
+    cities: ['TOR', 'CHA'],
+    points: 6,
+  },
+  {
+    id: 64,
+    tags: ['1910'],
+    cities: ['VAN', 'DEN'],
+    points: 11,
+  },
+  {
+    id: 65,
+    tags: ['1910'],
+    cities: ['VAN', 'DUL'],
+    points: 13,
+  },
+  {
+    id: 66,
+    tags: ['1910'],
+    cities: ['VAN', 'POR'],
+    points: 2,
+  },
+  {
+    id: 67,
+    tags: ['1910'],
+    cities: ['WAS', 'ATL'],
+    points: 4,
+  },
+  {
+    id: 68,
+    tags: ['1910'],
     cities: ['WIN', 'OMA'],
     points: 6,
   },
   {
-    id: 300,
-    set: '1910',
-    cities: ['MON', 'CHI'],
-    points: 7,
+    id: 69,
+    tags: ['1910'],
+    cities: ['WIN', 'SFE'],
+    points: 10,
   },
 ];

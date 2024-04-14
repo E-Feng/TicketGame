@@ -1,6 +1,5 @@
 import Command from './Command';
 import EndTurnCmd from './EndTurnCmd';
-import { NUM_DRAW_DEST_CARDS } from '../helpers/settings';
 import { drawTween } from '../helpers/tweens';
 
 const localPlayerId = localStorage.getItem('uid');
