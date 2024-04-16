@@ -53,7 +53,7 @@ export default class Player {
   };
   getSelectedCards = () => this.hand.filter((card) => card.selected);
   removeCard = (color) => {
-    const idx = this.hand.findIndex((c) => c.color === color);
+    const idx = this.hand.findIndex((c) => c.color === color && c.selected);
     const card = this.hand.splice(idx, 1)[0];
 
     return card;
