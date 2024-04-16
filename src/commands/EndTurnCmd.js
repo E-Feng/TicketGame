@@ -19,6 +19,7 @@ export default class EndTurnCmd extends Command {
   }
 
   apply = () => {
+    // Setting next turn
     const numPlayers = this.players.length;
     const currentIdx = this.players.findIndex((p) => p.id === this.playerId);
     const nextIdx = (currentIdx + 1) % numPlayers;
@@ -26,6 +27,17 @@ export default class EndTurnCmd extends Command {
     this.gameState.setCurrentTurn(nextIdx);
 
     currentTurnEmojiTween();
+
+    // Shuffling discard if deck is empty and replace faceup
+    if (!this.deck.hasCards()) {
+      this.deck.shuffleDiscardIntoDeck();
+    }
+
+    const numEmpty = this.faceUpCards.getEmptyCount();
+    for (let i = 0; i < numEmpty; i++) {
+      const newCard = this.gameState.deck.draw();
+      this.faceUpCards.replaceFaceUpCard(newCard);
+    }
 
     this.end();
   };
@@ -40,11 +52,13 @@ export default class EndTurnCmd extends Command {
       this.gameState.beginFinalTurn();
       finalTurnTween();
     }
-    
+
     this.render();
   };
 
   render = () => {
     this.board.render();
+    this.faceUpCards.render()
+    this.deck.render();
   };
 }

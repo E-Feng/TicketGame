@@ -42,7 +42,8 @@ export default class Deck {
     renderDeck();
   };
 
-  hasCards = () => this.cards.length > 0;
+  count = () => this.cards.length;
+  hasCards = () => this.count() > 0;
 
   draw = () => this.cards.pop();
 
@@ -56,6 +57,6 @@ export default class Deck {
     this.discardPile = [];
 
     const shuffleDeckPayload = { array: 'deck', seed: Math.random() };
-    new ShuffleCmd(this.gameState, null, shuffleDeckPayload, true);
+    new ShuffleCmd(this.scene, this.gameState, null, shuffleDeckPayload, true);
   };
 }

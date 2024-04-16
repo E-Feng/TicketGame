@@ -3,6 +3,7 @@ export const NUM_TRAINS = 45;
 export const NUM_TRAINS_END = 2;
 export const NUM_START_CARDS = 4;
 export const NUM_FACEUP_CARDS = 5;
+export const NUM_WILD_REPLACE = 3;
 
 export const DEST_CARD_SETTINGS = {
   base: {
@@ -18,12 +19,12 @@ export const DEST_CARD_SETTINGS = {
 export const TRAIN_COLORS_SETUP = [
   { color: 'green', number: 12 },
   { color: 'yellow', number: 12 },
-  { color: 'orange', number: 12 },
-  { color: 'white', number: 12 },
-  { color: 'black', number: 12 },
-  { color: 'red', number: 12 },
-  { color: 'blue', number: 12 },
-  { color: 'pink', number: 12 },
+  // { color: 'orange', number: 12 },
+  // { color: 'white', number: 12 },
+  // { color: 'black', number: 12 },
+  // { color: 'red', number: 12 },
+  // { color: 'blue', number: 12 },
+  // { color: 'pink', number: 12 },
   { color: 'wild', number: 14 },
 ];
 

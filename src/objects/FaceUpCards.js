@@ -29,11 +29,24 @@ export default class FaceUpCards {
     renderFaceUpCards();
   };
 
+  hasCards = () => this.cards.filter((c) => c !== null).length > 0;
+
   replaceFaceUpCard = (card) => {
+    if (card === undefined) return;
+
     const i = this.cards.findIndex((c) => c === null);
     this.cards[i] = card;
   };
 
+  getEmptyCount = () => this.cards.filter((c) => c === null).length;
+  getWildCount = () => this.cards.filter((c) => c?.color === 'wild').length;
+  isAllWilds = () =>
+    this.cards.filter((c) => c !== null).every((c) => c?.color === 'wild');
+
   getCardByIndex = (i) => this.cards[i];
-  removeCardByIndex = (i) => (this.cards[i] = null);
+  removeCardByIndex = (i) => {
+    const card = this.cards[i];
+    this.cards[i] = null;
+    return card;
+  };
 }

@@ -178,7 +178,7 @@ export const renderDeck = () => {
     allCards.push(...gameState.deck.cards);
     allCards.push(...gameState.faceUpCards.cards);
     gameState.players.forEach((p) => allCards.push(...p.hand));
-
+    console.log(allCards)
     allCards.forEach((card) => {
       c.add(
         scene.add
@@ -428,8 +428,13 @@ export const renderFaceUpCards = () => {
   const objs = container.getAll();
 
   objs.forEach((o, i) => {
-    const color = cards[i].color;
-    o.setTexture(color);
+    const color = cards[i]?.color;
+
+    if (color) {
+      o.setTexture(color);
+    } else {
+      o.setTexture();
+    }
   });
 };
 

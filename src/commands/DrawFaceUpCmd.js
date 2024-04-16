@@ -1,6 +1,7 @@
 import Command from './Command';
 import EndTurnCmd from './EndTurnCmd';
 import { drawTween } from '../helpers/tweens';
+import { NUM_WILD_REPLACE, NUM_FACEUP_CARDS } from '../helpers/settings';
 
 const localPlayerId = localStorage.getItem('uid');
 
@@ -35,15 +36,34 @@ export default class DrawFaceUpCmd extends Command {
 
   apply = () => {
     if (this.isLegal()) {
-      drawTween({ name: 'faceUpCards', payload: this.payload });
-
-      const faceUpCards = this.gameState.faceUpCards;
+      drawTween({
+        name: 'faceUpCards',
+        playerId: this.playerId,
+        payload: this.payload,
+      });
 
       this.player.addCard(this.clickedCard);
       this.faceUpCards.removeCardByIndex(this.payload);
 
-      const newCard = this.gameState.deck.draw();
-      faceUpCards.replaceFaceUpCard(newCard);
+      const emptyCount = this.faceUpCards.getEmptyCount();
+      for (let i = 0; i < emptyCount; i++) {
+        const newCard = this.gameState.deck.draw();
+        this.faceUpCards.replaceFaceUpCard(newCard);
+      }
+
+      // Replace all if 3 wilds present
+      const wildCount = this.faceUpCards.getWildCount();
+      if (wildCount >= NUM_WILD_REPLACE) {
+        const replaceCount = Math.min(this.deck.count(), NUM_FACEUP_CARDS);
+
+        for (let i = 0; i < replaceCount; i++) {
+          const newCard = this.deck.draw();
+          const removedCard = this.faceUpCards.removeCardByIndex(i);
+
+          this.faceUpCards.replaceFaceUpCard(newCard);
+          this.deck.discard(removedCard);
+        }
+      }
 
       this.end(this.clickedCard);
     }
@@ -51,7 +71,12 @@ export default class DrawFaceUpCmd extends Command {
 
   end = (clickedCard) => {
     if (this.playerId === localPlayerId) {
-      if (clickedCard.color === 'wild' || this.isSecondDraw) {
+      const drewWild = clickedCard.color === 'wild';
+      const isSecondDraw = this.isSecondDraw;
+      const isNoDrawableCards =
+        !this.deck.hasCards() && this.faceUpCards.isAllWilds();
+
+      if (drewWild || isSecondDraw || isNoDrawableCards) {
         this.player.clearActionContext();
         new EndTurnCmd(this.scene, this.gameState, this.playerId, null, true);
       } else {
@@ -69,6 +94,6 @@ export default class DrawFaceUpCmd extends Command {
   render = () => {
     this.player.render();
     this.faceUpCards.render();
-    this.board.render()
+    this.board.render();
   };
 }

@@ -13,12 +13,12 @@ export const initTweenVars = (initScene) => {
 };
 
 export const drawTween = (params) => {
-  const { name, payload } = params;
+  const { name, playerId, payload } = params;
   let obj;
   let texture;
   let number = 1;
 
-  const container = displayList.getByName(localPlayerId);
+  const container = displayList.getByName(playerId);
   const xTarget = container.x;
   const yTarget = container.y + container.height / 2;
 
@@ -33,7 +33,6 @@ export const drawTween = (params) => {
     texture = 'destDeck';
     number = 3;
   }
-  console.log(obj);
 
   const cardDelay = 75;
   for (let i = 0; i < number; i++) {
