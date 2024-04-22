@@ -109,10 +109,10 @@ const trainCardHeight = 76;
 const trainCardWidth = 140;
 
 const cardsX = mapX + mapWidth + 7;
-const cardsY = 10;
+const cardsY = 160;
 const cardsYDelta = trainCardHeight + 20;
 
-const deckY = 500;
+const deckY = 640;
 const countOffset = [100, 50];
 
 const handX = mapX + trainCardHeight;
@@ -178,7 +178,7 @@ export const renderDeck = () => {
     allCards.push(...gameState.deck.cards);
     allCards.push(...gameState.faceUpCards.cards);
     gameState.players.forEach((p) => allCards.push(...p.hand));
-    console.log(allCards)
+
     allCards.forEach((card) => {
       c.add(
         scene.add
@@ -199,7 +199,7 @@ export const renderDeck = () => {
 };
 
 const destDeckX = cardsX;
-const destDeckY = 645;
+const destDeckY = 10;
 
 const destCardX = mapX;
 const destCardY = 960;

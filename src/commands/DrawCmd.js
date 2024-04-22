@@ -41,18 +41,18 @@ export default class DrawCmd extends Command {
   };
 
   end = () => {
-    const isSecondDraw = this.player.actionContextContains('drawAgain');
+    if (!this.deck.hasCards()) {
+      this.deck.shuffleDiscardIntoDeck();
+    }
 
     if (this.playerId === localPlayerId) {
+      const isSecondDraw = this.player.actionContextContains('drawAgain');
+
       if (isSecondDraw) {
         this.player.clearActionContext();
         new EndTurnCmd(this.scene, this.gameState, this.playerId, null, true);
       } else {
         this.player.addActionContext('drawAgain');
-      }
-
-      if (!this.deck.hasCards()) {
-        this.deck.shuffleDiscardIntoDeck();
       }
     }
 
@@ -62,6 +62,6 @@ export default class DrawCmd extends Command {
   render = () => {
     this.player.render();
     this.deck.render();
-    this.board.render()
+    this.board.render();
   };
 }

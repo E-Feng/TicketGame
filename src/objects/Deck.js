@@ -56,7 +56,15 @@ export default class Deck {
     this.cards = this.cards.concat(this.discardPile);
     this.discardPile = [];
 
-    const shuffleDeckPayload = { array: 'deck', seed: Math.random() };
-    new ShuffleCmd(this.scene, this.gameState, null, shuffleDeckPayload, true);
+    if (localPlayerId === this.gameState.currentTurn) {
+      const shuffleDeckPayload = { array: 'deck', seed: Math.random() };
+      new ShuffleCmd(
+        this.scene,
+        this.gameState,
+        localPlayerId,
+        shuffleDeckPayload,
+        true
+      );
+    }
   };
 }

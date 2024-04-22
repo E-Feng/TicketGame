@@ -71,7 +71,6 @@ export default class GameState {
 
     // Deal out faceup cards
     for (let i = 0; i < NUM_FACEUP_CARDS; i++) {
-      console.log('replacing')
       const card = this.deck.draw();
       this.faceUpCards.replaceFaceUpCard(card);
     }

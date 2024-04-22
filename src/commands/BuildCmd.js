@@ -56,7 +56,7 @@ export default class BuildCmd extends Command {
     buildTween(this.route, this.player.color);
     buildDiscardTween(this.payment);
 
-    markCompletedDests(this.gameState, localPlayerId);
+    markCompletedDests(this.gameState, this.playerId);
     getPlayersLongestTrack(this.gameState);
 
     if (this.playerId === localPlayerId) {
