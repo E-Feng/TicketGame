@@ -1,6 +1,7 @@
 import ConfirmButton from './ConfirmButton';
 import { NUM_TRAINS } from '../helpers/settings';
 import { playerColorMap } from '../helpers/colors';
+import { getLongestPathLength, isDestComplete } from '../helpers/routeMath';
 import {
   renderHand,
   renderDestCards,
@@ -14,6 +15,7 @@ const localPlayerId = localStorage.getItem('uid');
 export default class Player {
   constructor(scene, gameState, player, order) {
     this.scene = scene;
+    this.gameState = gameState;
 
     this.id = player.id;
     this.display = player.display || player.id.slice(0, 4);
@@ -22,6 +24,7 @@ export default class Player {
     this.order = order;
     this.points = 1;
     this.trainsLeft = NUM_TRAINS;
+    this.longestPathLength = 0;
 
     this.hand = [];
     this.destCards = [];
@@ -68,12 +71,24 @@ export default class Player {
   getSelectedDestCards = () =>
     this.pendingDestCards.filter((c) => c.isSelected);
 
+  markCompletedDests = () => {
+    const routes = this.gameState.board.getPlayerRoutes(this.id);
+    this.destCards.forEach((destCard) => {
+      if (isDestComplete(destCard, routes)) {
+        destCard.markCompleted();
+      }
+    });
+  };
   calculateDestCardPoints = (destCard) => {
     this.addPoints(destCard.isCompleted ? destCard.points : -destCard.points);
   };
 
   addPoints = (pts) => (this.points += pts);
   minusTrains = (nTrains) => (this.trainsLeft -= nTrains);
+  updateLongestPathLength = () => {
+    const routes = this.gameState.board.getPlayerRoutes(this.id);
+    this.longestPathLength = getLongestPathLength(routes);
+  };
 
   isActionContextEmpty = () => this.actionContext.length === 0;
   actionContextContains = (action) => this.actionContext.includes(action);

@@ -1,10 +1,6 @@
 import { buildDiscardTween, buildTween } from '../helpers/tweens';
 import Command from './Command';
 import EndTurnCmd from './EndTurnCmd';
-import {
-  getPlayersLongestTrack,
-  markCompletedDests,
-} from '../helpers/routeMath';
 
 const localPlayerId = localStorage.getItem('uid');
 
@@ -56,8 +52,8 @@ export default class BuildCmd extends Command {
     buildTween(this.route, this.player.color);
     buildDiscardTween(this.payment);
 
-    markCompletedDests(this.gameState, this.playerId);
-    getPlayersLongestTrack(this.gameState);
+    this.player.markCompletedDests();
+    this.player.updateLongestPathLength();
 
     if (this.playerId === localPlayerId) {
       new EndTurnCmd(this.scene, this.gameState, this.playerId, null, true);

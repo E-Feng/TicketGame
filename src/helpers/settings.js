@@ -1,5 +1,5 @@
 export const NUM_PLAYERS_SINGLE_BUILD = 3;
-export const NUM_TRAINS = 45;
+export const NUM_TRAINS = 20;
 export const NUM_TRAINS_END = 2;
 export const NUM_START_CARDS = 4;
 export const NUM_FACEUP_CARDS = 5;
@@ -28,6 +28,8 @@ export const TRAIN_COLORS_SETUP = [
   { color: 'wild', number: 14 },
 ];
 
+export const LONGEST_PATH_POINTS = 10;
+export const GLOBETROTTER_POINTS = 15;
 export const TRAIN_POINTS = {
   1: 1,
   2: 2,

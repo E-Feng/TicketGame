@@ -85,7 +85,11 @@ export default class Bootstrap extends Phaser.Scene {
       });
     }
 
-    const data = { players: players, settings: settings, events: events };
+    const data = {
+      players: players,
+      settings: settings,
+      events: events,
+    };
     console.log(data);
 
     this.scene.start('game', data);
@@ -95,7 +99,7 @@ export default class Bootstrap extends Phaser.Scene {
     initializeApp(FIREBASE_CONFIG);
 
     const db = getDatabase();
-    const roomId = this.game.roomId || Math.floor(new Date().getTime() / 10000);
+    const roomId = this.game.roomId;
 
     rootRef = ref(db, `${roomId}/`);
     eventRef = ref(db, `${roomId}/events/`);
@@ -133,8 +137,8 @@ export default class Bootstrap extends Phaser.Scene {
   create() {
     // Display name setting
     const htmlInput = `
-      <input type="text" name="name" placeholder="Name" style="font-size: 32px">
-      <input type="button" name="setButton" value="Set" style="font-size: 32px"><br />
+      <input type="text" name="name" placeholder="Name" style="font-size: 48px">
+      <input type="button" name="setButton" value="Set" style="font-size: 48px;"><br />
       `;
     const inputForm = this.add
       .dom(800, 200)
@@ -157,10 +161,10 @@ export default class Bootstrap extends Phaser.Scene {
 
     // Mode settings
     const htmlSettings = `
-      <input type="radio" id="base" name="settings" value="base" checked>
-      <label for="base" style="font-size: 32px">Base</label>
-      <input type="radio" id="mega" name="settings" value="mega">
-      <label for="mega" style="font-size: 32px">Mega</label>
+      <input type="radio" id="base" name="settings" value="base" style="height: 25px; width: 25px" checked>
+      <label for="base" style="font-size: 48px">Base</label>
+      <input type="radio" id="mega" name="settings" value="mega" style="height: 25px; width: 25px">
+      <label for="mega" style="font-size: 48px">Mega</label>
     `;
     const optionsSelect = this.add
       .dom(800, 400)
@@ -210,9 +214,9 @@ export default class Bootstrap extends Phaser.Scene {
         const name = player.display || player.id;
         texts.add(
           this.add
-            .text(100, i * 100 + 100, [name])
+            .text(100, i * 100 + 100, [name.slice(1, 20)])
             .setFill('black')
-            .setFontSize(32)
+            .setFontSize(48)
         );
       });
     });
@@ -220,7 +224,7 @@ export default class Bootstrap extends Phaser.Scene {
     this.startButton = this.add
       .text(200, 700, ['START'])
       .setFill('black')
-      .setFontSize(32)
+      .setFontSize(48)
       .setInteractive();
     this.startButton.on('pointerdown', () => this.startGame());
   }

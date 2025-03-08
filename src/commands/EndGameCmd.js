@@ -11,6 +11,8 @@ export default class EndGameCmd extends Command {
     const displayList = this.scene.sys.displayList;
     const players = this.players;
 
+    this.gameState.status = 'endGame';
+
     const cardsContainer = displayList.getByName('cards');
     cardsContainer.getAll().forEach((card) => card.setVisible(false));
 

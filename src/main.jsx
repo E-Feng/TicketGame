@@ -8,6 +8,10 @@ import Game from './scenes/Game.js';
 import { width, height } from './helpers/renderer.js';
 
 const urlParam = window.location.pathname.replace('/', '');
+if (!urlParam) {
+  const randomRoomId = Math.floor(new Date().getTime() / 10000);
+  window.location.pathname = `/${randomRoomId}`;
+}
 
 const config = {
   type: Phaser.AUTO,

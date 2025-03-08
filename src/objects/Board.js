@@ -25,4 +25,12 @@ export default class Board {
   };
 
   getRouteById = (id) => this.routes.filter((r) => r.id === id)[0];
+
+  getPlayerRoutes = (playerId) => {
+    const playerRoutes = this.routes.filter((r) => {
+      const trackOwners = r.tracks.map((t) => t.owner);
+      return trackOwners.includes(playerId);
+    });
+    return playerRoutes;
+  };
 }

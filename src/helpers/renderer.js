@@ -109,11 +109,11 @@ const trainCardHeight = 76;
 const trainCardWidth = 140;
 
 const cardsX = mapX + mapWidth + 7;
-const cardsY = 160;
+const cardsY = 10;
 const cardsYDelta = trainCardHeight + 20;
 
-const deckY = 640;
-const countOffset = [100, 50];
+const deckY = 490;
+const deckCountOffset = [5, 8];
 
 const handX = mapX + trainCardHeight;
 const handY = 810;
@@ -160,7 +160,7 @@ export const renderDeck = () => {
     c.add(scene.add.image(0, 0, 'deck').setOrigin(0).setName('deck'));
     c.add(
       scene.add
-        .text(countOffset[0], countOffset[1])
+        .text(deckCountOffset[0], deckCountOffset[1])
         .setName('counter')
         .setFill('black')
         .setFontSize(24)
@@ -199,12 +199,14 @@ export const renderDeck = () => {
 };
 
 const destDeckX = cardsX;
-const destDeckY = 10;
+const destDeckY = 640;
 
 const destCardX = mapX;
 const destCardY = 960;
 const destCardWidth = 80;
 const destCardHeight = 100;
+
+const destDeckCountOffset = [100, 45];
 
 const indicatorRadius = 75;
 
@@ -220,7 +222,7 @@ export const renderDestDeck = () => {
     c.add(scene.add.image(0, 0, 'destDeck').setOrigin(0).setName('destDeck'));
     c.add(
       scene.add
-        .text(countOffset[0], countOffset[1])
+        .text(destDeckCountOffset[0], destDeckCountOffset[1])
         .setName('counter')
         .setFill('black')
         .setFontSize(24)
@@ -480,7 +482,11 @@ export const renderBoard = () => {
     });
 
     c.add(
-      scene.add.text(cardsX, longestTextY).setName('longest').setFontSize(48)
+      scene.add
+        .text(cardsX, longestTextY)
+        .setName('longest')
+        .setFontSize(36)
+        .setFill('black')
     );
 
     obj = displayList.getByName('board');
@@ -517,7 +523,17 @@ export const renderBoard = () => {
     });
   });
 
-  const longest = obj.getByName('longest').setText(`🚂🚂`);
+  let longestPathLength = 0;
+  let localPathLength = 0;
+  gameState.players.forEach((p) => {
+    if (p.longestPathLength > longestPathLength) {
+      longestPathLength = p.longestPathLength;
+    }
+    if (p.id === localPlayerId) {
+      localPathLength = p.longestPathLength;
+    }
+  });
+  obj.getByName('longest').setText(`🚂${longestPathLength} ${localPathLength}`);
 };
 
 export const renderCurrentTurnMessage = () => {

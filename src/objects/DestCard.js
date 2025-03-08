@@ -23,7 +23,9 @@ export default class DestCard {
 
   toggleSelected = () => {
     this.isSelected = !this.isSelected;
-    renderDestCards(this.gameState.getPlayer(localPlayerId));
+    if (this.gameState.status !== 'endGame') {
+      renderDestCards(this.gameState.getPlayer(localPlayerId));
+    }
   };
 
   markCompleted = () => (this.isCompleted = true);
