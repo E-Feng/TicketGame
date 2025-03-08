@@ -215,7 +215,7 @@ export default class Bootstrap extends Phaser.Scene {
         const name = player.display || player.id;
         texts.add(
           this.add
-            .text(100, i * 100 + 100, [name.slice(1, 20)])
+            .text(100, i * 100 + 100, [name.slice(0, 20)])
             .setFill('black')
             .setFontSize(48)
         );

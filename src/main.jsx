@@ -7,10 +7,11 @@ import Bootstrap from './scenes/Bootstrap';
 import Game from './scenes/Game.js';
 import { width, height } from './helpers/renderer.js';
 
+let roomId;
 const urlParam = window.location.pathname.replace('/', '');
 if (!urlParam) {
-  const randomRoomId = Math.floor(new Date().getTime() / 10000);
-  window.location.pathname = `/${randomRoomId}`;
+  roomId = Math.floor(new Date().getTime() / 10000);
+  window.location.pathname = `/${roomId}`;
 }
 
 const config = {
@@ -29,7 +30,7 @@ const config = {
   },
 };
 const game = new Phaser.Game(config);
-game.roomId = urlParam;
+game.roomId = urlParam || roomId;
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
