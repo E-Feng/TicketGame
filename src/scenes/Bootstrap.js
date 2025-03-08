@@ -100,6 +100,7 @@ export default class Bootstrap extends Phaser.Scene {
 
     const db = getDatabase();
     const roomId = this.game.roomId;
+    console.log('Room ID:', roomId);
 
     rootRef = ref(db, `${roomId}/`);
     eventRef = ref(db, `${roomId}/events/`);
