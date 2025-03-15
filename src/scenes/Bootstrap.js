@@ -110,16 +110,14 @@ export default class Bootstrap extends Phaser.Scene {
     initRef = ref(db, `${roomId}/init/`);
 
     // Setting up player, lobby ref
-    const isAuth = localStorage.getItem('isAuthenticated');
+    const isAuthed = localStorage.getItem('isAuthenticated');
 
+    const auth = getAuth();
 
-      console.time('authTime');
-      const auth = getAuth();
-      console.timeEnd('authTime');
-      console.time('signInTime');
+    if (!isAuthed) {
       await signInAnonymously(auth);
-      console.timeEnd('signInTime');
-    
+    }
+
     onAuthStateChanged(auth, (user) => {
       console.log('Signed in...');
       if (user) {
@@ -138,6 +136,7 @@ export default class Bootstrap extends Phaser.Scene {
         onDisconnect(selfRef).remove();
       } else {
         console.log('Failed to sign in...');
+        localStorage.setItem('isAuthenticated', false);
       }
     });
 
