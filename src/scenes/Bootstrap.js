@@ -114,6 +114,7 @@ export default class Bootstrap extends Phaser.Scene {
     signInAnonymously(auth);
 
     onAuthStateChanged(auth, (user) => {
+      console.log('Signed in...');
       if (user) {
         const playerId = user.uid;
         localStorage.setItem('uid', playerId);
@@ -127,6 +128,8 @@ export default class Bootstrap extends Phaser.Scene {
         set(selfRef, playerObj);
 
         onDisconnect(selfRef).remove();
+      } else {
+        console.log('Failed to sign in...');
       }
     });
 
