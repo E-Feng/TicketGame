@@ -110,14 +110,22 @@ export default class Bootstrap extends Phaser.Scene {
     initRef = ref(db, `${roomId}/init/`);
 
     // Setting up player, lobby ref
-    const auth = getAuth();
-    signInAnonymously(auth);
+    const isAuth = localStorage.getItem('isAuthenticated');
 
+
+      console.time('authTime');
+      const auth = getAuth();
+      console.timeEnd('authTime');
+      console.time('signInTime');
+      await signInAnonymously(auth);
+      console.timeEnd('signInTime');
+    
     onAuthStateChanged(auth, (user) => {
       console.log('Signed in...');
       if (user) {
         const playerId = user.uid;
         localStorage.setItem('uid', playerId);
+        localStorage.setItem('isAuthenticated', true);
 
         playerObj = {
           id: playerId,
